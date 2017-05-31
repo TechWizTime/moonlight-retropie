@@ -24,6 +24,12 @@ Then run the script:
 sudo ./moonlight.sh
 ```
 
+## If you get a TLS or SSL Error
+Sometimes, this can happen when trying to wget the script above. If it does, try this wget command instead
+```
+wget http://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh
+```
+
 ## Other Information
 If you have a problem with this script, please let me know by submitting an Issue.
 
