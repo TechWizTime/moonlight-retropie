@@ -90,7 +90,6 @@ echo -e "\n*****************************************"
 echo -e "PHASE EIGHT: Making Everything PI Again :)"
 echo -e "*****************************************\n"
 chown -R pi:pi /home/pi/RetroPie/roms/moonlight/
-chown -R pi:pi /opt/retropie/configs/moonlight/
 chown pi:pi /home/pi/.emulationstation/es_systems.cfg
 
 
