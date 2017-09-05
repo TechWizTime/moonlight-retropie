@@ -30,7 +30,12 @@ sudo ./moonlight.sh
 ## If you get a TLS or SSL Error
 Sometimes, this can happen when trying to wget the script above. If it does, try this wget command instead
 ```
-wget http://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh
+wget https://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh  --no-check
+```
+
+And if you are feeling particulary lazy, here's a shortlink via my website
+```
+wget https://techwiztime.com/moonlight.sh  --no-check
 ```
 
 ## Other Information
