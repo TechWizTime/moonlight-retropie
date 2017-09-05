@@ -43,18 +43,8 @@ apt-get install moonlight-embedded
 echo -e "\nDONE!!\n"
 
 
-echo -e "\n**********************************"
-echo -e "PHASE FIVE: Mapping the controller"
-echo -e "**********************************\n"
-mkdir /opt/retropie/configs/moonlight
-cd /opt/retropie/configs/moonlight
-read -n 1 -s -p "Make sure your controller is plugged in and press anykey to continue"
-moonlight map controller.map
-echo -e "\nDONE!!\n"
-
-
 echo -e "\n***************************************"
-echo -e "PHASE SIX: Pairing Moonlight with STEAM"
+echo -e "PHASE FIVE: Pairing Moonlight with STEAM"
 echo -e "***************************************\n"
 echo -e "Once you have input your STEAM PC's IP Address below, you will be given a PIN"
 echo -e "Input this on the STEAM PC to pair with Moonlight. \n"
@@ -63,18 +53,18 @@ sudo -u pi moonlight pair $ip
 
 
 echo -e "\n**************************************************"
-echo -e "PHASE SEVEN: Create Launching Scripts for RetroPie"
+echo -e "PHASE SIX: Create Launching Scripts for RetroPie"
 echo -e "**************************************************\n"
 mkdir /home/pi/RetroPie/roms/moonlight
 cd /home/pi/RetroPie/roms/moonlight
 echo "#!/bin/bash" > moonlight720p30fps.sh
-echo "moonlight stream -720 -30fps -mapping /opt/retropie/configs/moonlight/controller.map "$ip"" >>  moonlight720p30fps.sh
+echo "moonlight stream -720 -fps 30 "$ip"" >>  moonlight720p30fps.sh
 echo "#!/bin/bash" > moonlight720p60fps.sh
-echo "moonlight stream -720 -60fps -mapping /opt/retropie/configs/moonlight/controller.map "$ip"" >>  moonlight720p60fps.sh
+echo "moonlight stream -720 -fps 60 "$ip"" >>  moonlight720p60fps.sh
 echo "#!/bin/bash" > moonlight1080p30fps.sh
-echo "moonlight stream -1080 -30fps -mapping /opt/retropie/configs/moonlight/controller.map "$ip"" >>  moonlight1080p30fps.sh
+echo "moonlight stream -1080 -fps 30 "$ip"" >>  moonlight1080p30fps.sh
 echo "#!/bin/bash" > moonlight1080p60fps.sh
-echo "moonlight stream -1080 -60fps -mapping /opt/retropie/configs/moonlight/controller.map "$ip"" >>  moonlight1080p60fps.sh
+echo "moonlight stream -1080 -fps 60 "$ip"" >>  moonlight1080p60fps.sh
 chmod +x moonlight720p30fps.sh
 chmod +x moonlight720p60fps.sh
 chmod +x moonlight1080p30fps.sh
@@ -82,7 +72,7 @@ chmod +x moonlight1080p60fps.sh
 
 
 echo -e "\n*******************************************"
-echo -e "PHASE EIGHT: Create STEAM Menu for RetroPie"
+echo -e "PHASE SEVEN: Create STEAM Menu for RetroPie"
 echo -e "*******************************************\n"
 if [ -f /home/pi/.emulationstation/es_systems.cfg ]
 then
@@ -97,7 +87,7 @@ fi
 
 
 echo -e "\n*****************************************"
-echo -e "PHASE NINE: Making Everything PI Again :)"
+echo -e "PHASE EIGHT: Making Everything PI Again :)"
 echo -e "*****************************************\n"
 chown -R pi:pi /home/pi/RetroPie/roms/moonlight/
 chown -R pi:pi /opt/retropie/configs/moonlight/
