@@ -7,14 +7,11 @@ echo -e "\nPlease make sure you have done the following:\n"
 echo -e "\n1: Checked that you have an Nvidia Graphics Card GTX650+"
 echo -e "2: Updated your Nvidia Drivers on your PC"
 echo -e "3: Enabled GAMESTREAM in GeForce Experience on PC"
-echo -e "4: You are running RetroPie 4.2+ on your Raspberry Pi"
+echo -e "4: You are running RetroPie 4.3+ on your Raspberry Pi"
 echo -e "5: You are connected to the same network as PC (preferably Wired)"
 echo -e "6: Your controller is hooked up to your Raspberry Pi"
 echo -e "7: You have subscribed to youtube.com/TechWizTime :)"
-
-echo -e "\n***************************************************"
-echo -e "MAIN MENU - Moonlight Installer Script for RetroPie"
-echo -e "***************************************************\n"
+echo -e "\n***************************************************\n"
 echo -e "Select an option:"
 echo -e " * 1: Install Moonlight,Pair,Install Scripts,Install Menus"
 echo -e " * 2: Install Launch Scripts"
@@ -66,13 +63,13 @@ case $NUM in
 		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
 		echo "#!/bin/bash" > 720p30fps.sh
-		echo "moonlight stream -720 -fps 30 "$ip"" >>  moonlight720p30fps.sh
+		echo "moonlight stream -720 -fps 30 "$ip"" >>  720p30fps.sh
 		echo "#!/bin/bash" > 720p60fps.sh
-		echo "moonlight stream -720 -fps 60 "$ip"" >>  moonlight720p60fps.sh
+		echo "moonlight stream -720 -fps 60 "$ip"" >>  720p60fps.sh
 		echo "#!/bin/bash" > 1080p30fps.sh
-		echo "moonlight stream -1080 -fps 30 "$ip"" >>  moonlight1080p30fps.sh
+		echo "moonlight stream -1080 -fps 30 "$ip"" >>  1080p30fps.sh
 		echo "#!/bin/bash" > 1080p60fps.sh
-		echo "moonlight stream -1080 -fps 60 "$ip"" >>  moonlight1080p60fps.sh
+		echo "moonlight stream -1080 -fps 60 "$ip"" >>  1080p60fps.sh
 		chmod +x 720p30fps.sh
 		chmod +x 720p60fps.sh
 		chmod +x 1080p30fps.sh
@@ -110,7 +107,9 @@ case $NUM in
 		read -p "Reboot Now (y/n)?" choice
 		case "$choice" in 
 		  y|Y ) shutdown -r now;;
-		  n|N ) exit 1;;
+		  n|N ) cd /home/pi
+		  ./moonlight.sh
+		  ;;
 		  * ) echo "invalid";;
 		esac
 	;;
@@ -120,13 +119,13 @@ case $NUM in
 		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
 		echo "#!/bin/bash" > 720p30fps.sh
-		echo "moonlight stream -720 -fps 30 "$ip"" >>  moonlight720p30fps.sh
+		echo "moonlight stream -720 -fps 30 "$ip"" >>  720p30fps.sh
 		echo "#!/bin/bash" > 720p60fps.sh
-		echo "moonlight stream -720 -fps 60 "$ip"" >>  moonlight720p60fps.sh
+		echo "moonlight stream -720 -fps 60 "$ip"" >>  720p60fps.sh
 		echo "#!/bin/bash" > 1080p30fps.sh
-		echo "moonlight stream -1080 -fps 30 "$ip"" >>  moonlight1080p30fps.sh
+		echo "moonlight stream -1080 -fps 30 "$ip"" >>  1080p30fps.sh
 		echo "#!/bin/bash" > 1080p60fps.sh
-		echo "moonlight stream -1080 -fps 60 "$ip"" >>  moonlight1080p60fps.sh
+		echo "moonlight stream -1080 -fps 60 "$ip"" >>  1080p60fps.sh
 		chmod +x 720p30fps.sh
 		chmod +x 720p60fps.sh
 		chmod +x 1080p30fps.sh
@@ -135,6 +134,8 @@ case $NUM in
 		echo -e "\n\n\n************************************************"
 		echo -e "Moonlight Launch Scripts Creation completed"
 		echo -e "************************************************\n\n\n"
+		cd /home/pi
+		./moonlight.sh
 	;;
 	3) echo -e "\n**************************************************"
 		echo -e "Remove All Old Launch Scripts"
@@ -145,6 +146,8 @@ case $NUM in
 		echo -e "\n\n\n************************************************"
 		echo -e "Remove All Old Launch Scripts completed"
 		echo -e "************************************************\n\n\n"
+		cd /home/pi
+		./moonlight.sh
 	;;
 	4)  
 	echo -e "\n**************************************************"
@@ -153,15 +156,17 @@ case $NUM in
 		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
 		echo "#!/bin/bash" > 480p30fps.sh
-		echo "moonlight stream -width 640 -height 480 -fps 30 "$ip"" >>  moonlight720p30fps.sh
+		echo "moonlight stream -width 640 -height 480 -fps 30 "$ip"" >>  480p30fps.sh
 		echo "#!/bin/bash" > 480p60fps.sh
-		echo "moonlight stream -width 640 -height 480 -fps 60 "$ip"" >>  moonlight720p60fps.sh
+		echo "moonlight stream -width 640 -height 480 -fps 60 "$ip"" >>  480p60fps.sh
 		chmod +x 480p30fps.sh
 		chmod +x 480p60fps.sh
 		
 		echo -e "\n\n\n************************************************"
 		echo -e "480p Launch Scripts completed"
 		echo -e "************************************************\n\n\n"
+		cd /home/pi
+		./moonlight.sh
 	;;
 	5) 
 		echo -e "\n***************************************"
@@ -175,6 +180,8 @@ case $NUM in
 		echo -e "\n\n\n************************************************"
 		echo -e "RE Pairing Moonlight with STEAM completed"
 		echo -e "************************************************\n\n\n"
+		cd /home/pi
+		./moonlight.sh
 	;;
 	6)  exit 1;;
 	*) echo "INVALID NUMBER!" ;;
