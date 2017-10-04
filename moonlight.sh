@@ -22,7 +22,7 @@ echo -e " * 3: Remove Launch Scripts"
 echo -e " * 4: Add 480p Launch Scripts"
 echo -e " * 5: Re Pair Moonlight with PC"
 echo -e " * 6: Exit"
-
+read NUM
 case $NUM in
 	1) echo -e "\n*******************************************"
 		echo -e "PHASE ONE: Adding Moonlight to Sources List"
