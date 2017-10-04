@@ -11,8 +11,6 @@ echo -e "4: You are running RetroPie 4.2+ on your Raspberry Pi"
 echo -e "5: You are connected to the same network as PC (preferably Wired)"
 echo -e "6: Your controller is hooked up to your Raspberry Pi"
 echo -e "7: You have subscribed to youtube.com/TechWizTime :)"
-echo -e "\nIf you need to exit, do it now by pressing CTRL+C otherwise\n\n\n"
-read -n 1 -s -p "Press anykey to continue"
 
 echo -e "\n***************************************************"
 echo -e "MAIN MENU - Moonlight Installer Script for RetroPie"
