@@ -47,7 +47,7 @@ case $NUM in
 		echo -e "\n**************************************"
 		echo -e "PHASE FOUR: Install Moonlight Software"
 		echo -e "**************************************\n"
-		apt-get install moonlight-embedded
+		apt-get install moonlight-embedded -y
 		echo -e "\nDONE!!\n"
 		
 		
