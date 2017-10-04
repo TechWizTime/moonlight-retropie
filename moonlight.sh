@@ -63,20 +63,20 @@ case $NUM in
 		echo -e "\n**************************************************"
 		echo -e "PHASE SIX: Create Launching Scripts for RetroPie"
 		echo -e "**************************************************\n"
-		mkdir /home/pi/RetroPie/roms/moonlight
+		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
-		echo "#!/bin/bash" > moonlight720p30fps.sh
+		echo "#!/bin/bash" > 720p30fps.sh
 		echo "moonlight stream -720 -fps 30 "$ip"" >>  moonlight720p30fps.sh
-		echo "#!/bin/bash" > moonlight720p60fps.sh
+		echo "#!/bin/bash" > 720p60fps.sh
 		echo "moonlight stream -720 -fps 60 "$ip"" >>  moonlight720p60fps.sh
-		echo "#!/bin/bash" > moonlight1080p30fps.sh
+		echo "#!/bin/bash" > 1080p30fps.sh
 		echo "moonlight stream -1080 -fps 30 "$ip"" >>  moonlight1080p30fps.sh
-		echo "#!/bin/bash" > moonlight1080p60fps.sh
+		echo "#!/bin/bash" > 1080p60fps.sh
 		echo "moonlight stream -1080 -fps 60 "$ip"" >>  moonlight1080p60fps.sh
-		chmod +x moonlight720p30fps.sh
-		chmod +x moonlight720p60fps.sh
-		chmod +x moonlight1080p30fps.sh
-		chmod +x moonlight1080p60fps.sh
+		chmod +x 720p30fps.sh
+		chmod +x 720p60fps.sh
+		chmod +x 1080p30fps.sh
+		chmod +x 1080p60fps.sh
 		
 		
 		echo -e "\n*******************************************"
@@ -117,20 +117,20 @@ case $NUM in
 	2) echo -e "\n**************************************************"
 		echo -e "Create Launching Scripts for RetroPie"
 		echo -e "**************************************************\n"
-		mkdir /home/pi/RetroPie/roms/moonlight
+		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
-		echo "#!/bin/bash" > moonlight720p30fps.sh
+		echo "#!/bin/bash" > 720p30fps.sh
 		echo "moonlight stream -720 -fps 30 "$ip"" >>  moonlight720p30fps.sh
-		echo "#!/bin/bash" > moonlight720p60fps.sh
+		echo "#!/bin/bash" > 720p60fps.sh
 		echo "moonlight stream -720 -fps 60 "$ip"" >>  moonlight720p60fps.sh
-		echo "#!/bin/bash" > moonlight1080p30fps.sh
+		echo "#!/bin/bash" > 1080p30fps.sh
 		echo "moonlight stream -1080 -fps 30 "$ip"" >>  moonlight1080p30fps.sh
-		echo "#!/bin/bash" > moonlight1080p60fps.sh
+		echo "#!/bin/bash" > 1080p60fps.sh
 		echo "moonlight stream -1080 -fps 60 "$ip"" >>  moonlight1080p60fps.sh
-		chmod +x moonlight720p30fps.sh
-		chmod +x moonlight720p60fps.sh
-		chmod +x moonlight1080p30fps.sh
-		chmod +x moonlight1080p60fps.sh
+		chmod +x 720p30fps.sh
+		chmod +x 720p60fps.sh
+		chmod +x 1080p30fps.sh
+		chmod +x 1080p60fps.sh
 		
 		echo -e "\n\n\n************************************************"
 		echo -e "Moonlight Launch Scripts Creation completed"
@@ -150,14 +150,14 @@ case $NUM in
 	echo -e "\n**************************************************"
 		echo -e "Create 480p Launching Scripts for RetroPie"
 		echo -e "**************************************************\n"
-		mkdir /home/pi/RetroPie/roms/moonlight
+		mkdir -p /home/pi/RetroPie/roms/moonlight
 		cd /home/pi/RetroPie/roms/moonlight
-		echo "#!/bin/bash" > moonlight480p30fps.sh
+		echo "#!/bin/bash" > 480p30fps.sh
 		echo "moonlight stream -width 640 -height 480 -fps 30 "$ip"" >>  moonlight720p30fps.sh
-		echo "#!/bin/bash" > moonlight480p60fps.sh
+		echo "#!/bin/bash" > 480p60fps.sh
 		echo "moonlight stream -width 640 -height 480 -fps 60 "$ip"" >>  moonlight720p60fps.sh
-		chmod +x moonlight480p30fps.sh
-		chmod +x moonlight480p60fps.sh
+		chmod +x 480p30fps.sh
+		chmod +x 480p60fps.sh
 		
 		echo -e "\n\n\n************************************************"
 		echo -e "480p Launch Scripts completed"
