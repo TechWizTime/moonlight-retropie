@@ -1,6 +1,3 @@
-# Fork notes:
-This fork of TechWizTime's moonlight-retropie installation script updates the functionality to remove the mapping step. Most controller configs are built into moonlight-embedded at this point, and performing a 'map' caused the application to hang for me. I also fix the mapping and fps launch options to match the newest version of moonlight-embedded. Original README from TechWizTime below.
-
 # moonlight-retropie
 The Install &amp; Setup Script for Moonlight within RetroPie 4.2+ from **TechWizTime**
 
