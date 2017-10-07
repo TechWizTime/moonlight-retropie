@@ -38,6 +38,7 @@ case $NUM in
 			echo -e "NOTE: GPG Key Exists - Skipping"
 		else		
 			wget http://archive.itimmer.nl/itimmer.gpg
+			chown pi:pi /home/pi/itimmer.gpg
 			apt-key add itimmer.gpg		
 		fi
 
@@ -283,7 +284,8 @@ case $NUM in
 			echo -e "Removing Script"
 			rm /home/pi/moonlight.sh
 		fi
-		wget https://techwiztime.com/moonlight.sh
+		wget https://techwiztime.com/moonlight.sh --no-check
+		chown pi:pi /home/pi/moonlight.sh
 		chmod +x moonlight.sh
 		./moonlight.sh
 	;;
