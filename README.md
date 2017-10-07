@@ -34,7 +34,7 @@ And if you are feeling particulary lazy, here's a shortlink via my website
 wget https://techwiztime.com/moonlight.sh  --no-check
 ```
 ## Acknowledgements
-etgrieco - Thanks for fixing the script when the mapping broke!
+@etgrieco - Thanks for fixing the script when the mapping broke!
 
 
 ## Other Information
