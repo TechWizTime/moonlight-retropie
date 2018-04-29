@@ -21,11 +21,11 @@ case $NUM in
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
 		echo -e "****************************************\n"
 		
-		if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" /etc/apt/sources.list; then
+		if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight stretch main" /etc/apt/sources.list; then
 			echo -e "NOTE: Moonlight Source Exists - Skipping"
 		else
 			echo -e "Adding Moonlight to Sources List"
-			echo "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" >> /etc/apt/sources.list
+			echo "deb http://archive.itimmer.nl/raspbian/moonlight stretch main" >> /etc/apt/sources.list
 		fi
 		
 		echo -e "\n**** PHASE ONE Complete!!!! ****"
