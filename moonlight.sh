@@ -1,4 +1,6 @@
 #!/bin/bash
+# criar argumento "force" nas funções para sobrescrever os arquivos
+#testar se add_sources funciona com debian stretch
 
 function add_sources {
 	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" /etc/apt/sources.list; then
