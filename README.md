@@ -1,3 +1,11 @@
+# To-Do
+* criar argumento "force" nas funções para sobrescrever os arquivos
+* testar se add_sources funciona com debian stretch
+* criar validacao para ver se instalou corretamente
+* fazer validacao para ver se pareou
+
+# --------- ORIGINAL README ---------
+
 # moonlight-retropie
 The Install &amp; Setup Script for Moonlight within RetroPie 4.2+ from **TechWizTime**
 
