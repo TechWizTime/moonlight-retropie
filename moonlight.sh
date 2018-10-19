@@ -1,18 +1,5 @@
 #!/bin/bash
 
-echo -e "\n****************************************************************"
-echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
-echo -e "****************************************************************\n"
-echo -e "Select an option:"
-echo -e " * 1: Install Moonlight, Pair, Install Scripts, Install Menus"
-echo -e " * 2: Install Launch Scripts"
-echo -e " * 3: Remove Launch Scripts"
-echo -e " * 4: Re Pair Moonlight with PC"
-echo -e " * 5: Refresh SYSTEMS Config File"
-echo -e " * 6: Update This Script"
-echo -e " * 7: Change Default Audio Output"
-echo -e " * 0: Exit"
-
 function add_sources {
 	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" /etc/apt/sources.list; then
 		echo -e "NOTE: Moonlight Source Exists - Skipping"
@@ -126,6 +113,19 @@ function update_script {
 	chown pi:pi /home/pi/moonlight.sh
 	chmod +x moonlight.sh
 }
+
+echo -e "\n****************************************************************"
+echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
+echo -e "****************************************************************\n"
+echo -e "Select an option:"
+echo -e " * 1: Install Moonlight, Pair, Install Scripts, Install Menus"
+echo -e " * 2: Install Launch Scripts"
+echo -e " * 3: Remove Launch Scripts"
+echo -e " * 4: Re Pair Moonlight with PC"
+echo -e " * 5: Refresh SYSTEMS Config File"
+echo -e " * 6: Update This Script"
+echo -e " * 7: Change Default Audio Output"
+echo -e " * 0: Exit"
 
 read NUM
 case $NUM in
