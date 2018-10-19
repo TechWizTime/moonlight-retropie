@@ -3,6 +3,8 @@
 * testar se add_sources funciona com debian stretch
 * criar validacao para ver se instalou corretamente
 * fazer validacao para ver se pareou
+* Criar configuração de saida padrão de áudio
+* Criar configuração de controlle
 
 # --------- ORIGINAL README ---------
 
