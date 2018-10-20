@@ -210,7 +210,7 @@ function restart_script {
 }
 
 function menu_config_script {
-	if []; then
+	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight ]; then
 		echo -e "Do you wish to remove the configuration menu?(y/N)"
 		read option
 		case "$option" in
