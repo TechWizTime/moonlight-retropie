@@ -1,23 +1,23 @@
 #!/bin/bash
 
 wd="`pwd`"
-home_dir="$/home/pi"
+home_dir="/home/pi"
 
 function add_sources {
 	# $1 = jessie or stretch
-	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight $1 main" /etc/apt/sources.list; then
+	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" /etc/apt/sources.list; then
 		echo -e "NOTE: Moonlight Source Exists - Skipping"
 	else
 		echo -e "Adding Moonlight to Sources List"
-		echo "deb http://archive.itimmer.nl/raspbian/moonlight $1 main" >> /etc/apt/sources.list
+		echo "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" >> /etc/apt/sources.list
 	fi
 }
 
 function install_gpg_keys {
 	# $1 can be -f to force overwriting
-	if [ -f $home_dir/itimmer.gpg ]; then
+	if [ -f "$home_dir"/itimmer.gpg ]; then
 		echo -n "NOTE: GPG Key Exists - "
-		if [ $1 == '-f' ]; then
+		if [ "$1" == '-f' ]; then
 			echo -e "Skipping"
 			return 0
 		else
@@ -26,7 +26,7 @@ function install_gpg_keys {
 	fi	
 
 	wget http://archive.itimmer.nl/itimmer.gpg
-	chown pi:pi $home_dir/itimmer.gpg
+	chown pi:pi "$home_dir"/itimmer.gpg
 	apt-key add itimmer.gpg
 
 }
@@ -34,13 +34,13 @@ function install_gpg_keys {
 function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
 	error=''
-	case $1 in
-		'-u') apt-get update -y 2> $error ;;&
-		'-i') apt-get install moonlight-embedded -y 2> $error ;;
+	case "$1" in
+		'-u') apt-get update -y 2> "$error" ;;&
+		'-i') apt-get install moonlight-embedded -y 2> "$error" ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
 
-    if [ $error != '' ]; then
+    if [ "$error" != '' ]; then
 		echo "$error"
 		echo -e "ERROR: Something went wrong installing moonlight!"
 		return 1
@@ -57,29 +57,29 @@ function pair_moonlight {
 }
 
 function create_menu {
-	if [ -f $home_dir/.emulationstation/es_systems.cfg ]
+	if [ -f "$home_dir"/.emulationstation/es_systems.cfg ]
 	then
 		echo -e "Removing Duplicate Systems File"
-		rm $home_dir/.emulationstation/es_systems.cfg
+		rm "$home_dir"/.emulationstation/es_systems.cfg
 	fi
 
 	echo -e "Copying Systems Config File"
-	cp /etc/emulationstation/es_systems.cfg $home_dir/.emulationstation/es_systems.cfg
+	cp /etc/emulationstation/es_systems.cfg "$home_dir"/.emulationstation/es_systems.cfg
 
-	if grep -q "<platform>steam</platform>" $home_dir/.emulationstation/es_systems.cfg; then
+	if grep -q "<platform>steam</platform>" "$home_dir"/.emulationstation/es_systems.cfg; then
 		echo -e "NOTE: Steam Entry Exists - Skipping"
 	else
 		echo -e "Adding Steam to Systems"
-		sudo sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' $home_dir/.emulationstation/es_systems.cfg
+		sudo sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' "$home_dir"/.emulationstation/es_systems.cfg
 	fi
 }
 
 function create_launch_scripts {
 	echo -e "Create Script Folder"
-	mkdir -p $home_dir/RetroPie/roms/moonlight
-	cd $home_dir/RetroPie/roms/moonlight
+	mkdir -p "$home_dir"/RetroPie/roms/moonlight
+	cd "$home_dir"/RetroPie/roms/moonlight
 
-	if [ $1 == '-f' ]; then
+	if [ "$1" == '-f' ]; then
 		echo -e "NOTE: Removing old scripts"
 		remove_launch_scripts
 	fi
@@ -119,38 +119,38 @@ function create_launch_scripts {
 	chmod +x 1080p30fps.sh
 	chmod +x 1080p60fps.sh
 
-	cd $wd
+	cd "$wd"
 }
 
 function remove_launch_scripts {
-	cd $home_dir/RetroPie/roms/moonlight
+	cd "$home_dir"/RetroPie/roms/moonlight
 	rm *
-	cd $wd
+	cd "$wd"
 }
 
 function set_permissions {
 	echo -e "Changing File Permissions"
-	chown -R pi:pi $home_dir/RetroPie/roms/moonlight/
-	chown pi:pi $home_dir/.emulationstation/es_systems.cfg
+	chown -R pi:pi "$home_dir"/RetroPie/roms/moonlight/
+	chown pi:pi "$home_dir"/.emulationstation/es_systems.cfg
 }
 
 function update_script {
-	if [ -f $wd/moonlight.sh ]
+	if [ -f "$wd"/moonlight.sh ]
 	then
 		echo -e "Removing Script"
-		rm $wd/moonlight.sh
+		rm "$wd"/moonlight.sh
 	fi
 	#wget https://techwiztime.com/moonlight.sh --no-check
 	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check 2> $error
 	if [ "$error" ]; then
 		echo -e "$error"; return 1; 
 	fi
-	chown pi:pi $wd/moonlight.sh
-	chmod +x $wd/moonlight.sh
+	chown pi:pi "$wd"/moonlight.sh
+	chmod +x "$wd"/moonlight.sh
 }
 
 function restart_script {
-	cd $wd
+	cd "$wd"
 	./moonlight.sh
 }
 
@@ -168,7 +168,7 @@ echo -e " * 7: Change Default Audio Output"
 echo -e " * 0: Exit"
 
 read NUM
-case $NUM in
+case "$NUM" in
 	1)
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
 		echo -e "****************************************\n"
