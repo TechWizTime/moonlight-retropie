@@ -2,7 +2,7 @@
 set -e # exit on error
 
 if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
-	wd='"$home_dir"/RetroPie/roms/moonlight/moonlight.sh'
+	wd='"$home_dir"/RetroPie/roms/moonlight'
 else
 	wd="`pwd`"
 fi
