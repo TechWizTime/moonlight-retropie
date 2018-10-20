@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e # exit on error
 
 wd="`pwd`"
@@ -29,16 +28,16 @@ function install_gpg_keys {
 	fi	
 
 	wget http://archive.itimmer.nl/itimmer.gpg 
-	chown pi:pi "$wd"/itimmer.gpg 
-	apt-key add itimmer.gpg 
+	sudo chown pi:pi "$wd"/itimmer.gpg 
+	sudo apt-key add itimmer.gpg 
 	rm "$wd"/itimmer.gpg
 }
 
 function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
 	case "$1" in
-		-u) apt-get update -y ;;
-		-i) apt-get install moonlight-embedded -y  ;;
+		-u) sudo apt-get update -y ;;
+		-i) sudo apt-get install moonlight-embedded -y  ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
 }
@@ -109,10 +108,10 @@ function create_launch_scripts {
 	fi
 
 	echo -e "Make Scripts Executable"
-	chmod +x 720p30fps.sh 
-	chmod +x 720p60fps.sh
-	chmod +x 1080p30fps.sh
-	chmod +x 1080p60fps.sh
+	sudo chmod +x 720p30fps.sh 
+	sudo chmod +x 720p60fps.sh
+	sudo chmod +x 1080p30fps.sh
+	sudo chmod +x 1080p60fps.sh
 
 	cd "$wd"
 }
@@ -124,8 +123,8 @@ function remove_launch_scripts {
 
 function set_permissions {
 	echo -e "Changing File Permissions"
-	chown -R pi:pi "$home_dir"/RetroPie/roms/moonlight/
-	chown pi:pi "$home_dir"/.emulationstation/es_systems.cfg
+	sudo chown -R pi:pi "$home_dir"/RetroPie/roms/moonlight/
+	sudo chown pi:pi "$home_dir"/.emulationstation/es_systems.cfg
 }
 
 function map_controller {
@@ -201,8 +200,8 @@ function update_script {
 	fi
 	#wget https://techwiztime.com/moonlight.sh --no-check
 	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check
-	chown pi:pi "$wd"/moonlight.sh
-	chmod +x "$wd"/moonlight.sh
+	sudo chown pi:pi "$wd"/moonlight.sh
+	sudo chmod +x "$wd"/moonlight.sh
 }
 
 function restart_script {
@@ -210,16 +209,16 @@ function restart_script {
 }
 
 function menu_config_script {
-	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight ]; then
+	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
 		echo -e "Do you wish to remove the configuration menu?(y/N)"
 		read option
 		case "$option" in
-			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight ;;
+			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ;;
 			n|N) return 0 ;;
 			*) echo -e "Invalid."; return 0 ;;
 		esac
 	else
-		ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight
+		ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
 	fi
 }
 
@@ -283,7 +282,7 @@ case "$NUM" in
 
 		read -p "Reboot Now (y/n)?" choice
 		case "$choice" in
-		  y|Y ) shutdown -r now;;
+		  y|Y ) sudo shutdown -r now;;
 		  n|N ) restart_script;;
 		  * ) echo "invalid";;
 		esac
