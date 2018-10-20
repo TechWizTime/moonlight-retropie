@@ -53,11 +53,11 @@ function create_menu {
 	if [ -f "$home_dir"/.emulationstation/es_systems.cfg ]
 	then
 		echo -e "Removing Duplicate Systems File"
-		rm "$home_dir"/.emulationstation/es_systems.cfg
+		sudo rm "$home_dir"/.emulationstation/es_systems.cfg
 	fi
 
 	echo -e "Copying Systems Config File"
-	cp /etc/emulationstation/es_systems.cfg "$home_dir"/.emulationstation/es_systems.cfg
+	sudo cp /etc/emulationstation/es_systems.cfg "$home_dir"/.emulationstation/es_systems.cfg
 
 	if grep -q "<platform>steam</platform>" "$home_dir"/.emulationstation/es_systems.cfg; then
 		echo -e "NOTE: Steam Entry Exists - Skipping"
