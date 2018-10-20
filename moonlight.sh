@@ -209,6 +209,20 @@ function restart_script {
 	cd "$wd" && ./moonlight.sh
 }
 
+function menu_config_script {
+	if []; then
+		echo -e "Do you wish to remove the configuration menu?(y/N)"
+		read option
+		case "$option" in
+			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight ;;
+			n|N) return 0 ;;
+			*) echo -e "Invalid."; return 0 ;;
+		esac
+	else
+		ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight
+	fi
+}
+
 echo -e "\n****************************************************************"
 echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
 echo -e "****************************************************************\n"
@@ -221,6 +235,7 @@ echo -e " * 5: Refresh SYSTEMS Config File"
 echo -e " * 6: Update This Script"
 echo -e " * 7: Change Default Audio Output"
 echo -e " * 8: Controller Mapping"
+echo -e " * 9: Put this Script on the EmulationStation menu"
 echo -e " * 0: Exit"
 
 read NUM
@@ -324,6 +339,13 @@ case "$NUM" in
 		echo -e "\nMapping the controller"
 		echo -e "**********************************\n"
 		map_controller
+		restart_script
+	;;
+
+	9) 
+		echo -e "\nCreate menu entry"
+		echo -e "**********************************\n"
+		menu_config_script
 		restart_script
 	;;
 
