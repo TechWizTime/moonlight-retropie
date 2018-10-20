@@ -222,7 +222,9 @@ function menu_config_script {
 	fi
 }
 
-echo -e "\n****************************************************************"
+echo -e "$wd"
+echo -e "\n******************************************************
+**********"
 echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
 echo -e "****************************************************************\n"
 echo -e "Select an option:"
@@ -236,6 +238,7 @@ echo -e " * 7: Change Default Audio Output"
 echo -e " * 8: Controller Mapping"
 echo -e " * 9: Put this Script on the EmulationStation menu"
 echo -e " * 0: Exit"
+echo -n " > "
 
 read NUM
 case "$NUM" in
@@ -280,7 +283,7 @@ case "$NUM" in
 		echo -e "To be safe, it's recommended that you perform a reboot now."
 		echo -e "\nIf you don't want to reboot now, press N\n"
 
-		read -p "Reboot Now (y/n)?" choice
+		read -p "Reboot Now (y/n)? " choice
 		case "$choice" in
 		  y|Y ) sudo shutdown -r now;;
 		  n|N ) restart_script;;
@@ -344,6 +347,7 @@ case "$NUM" in
 	9) 
 		echo -e "\nCreate menu entry"
 		echo -e "**********************************\n"
+		echo -e "NOTE: You won't be able to interact with this script using a controller!"
 		menu_config_script
 		restart_script
 	;;
