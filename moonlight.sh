@@ -1,7 +1,10 @@
 #!/bin/bash
 
+set -e # exit on error
+
 wd="`pwd`"
 home_dir="/home/pi"
+error=''
 
 function add_sources {
 	# $1 = jessie or stretch
@@ -25,9 +28,9 @@ function install_gpg_keys {
 		fi
 	fi	
 
-	wget http://archive.itimmer.nl/itimmer.gpg
-	chown pi:pi "$home_dir"/itimmer.gpg
-	apt-key add itimmer.gpg
+	wget http://archive.itimmer.nl/itimmer.gpg 
+	chown pi:pi "$home_dir"/itimmer.gpg 
+	apt-key add itimmer.gpg 
 
 }
 
@@ -36,24 +39,16 @@ function update_and_install_moonlight {
 	error=''
 	case "$1" in
 		'-u') apt-get update -y 2> "$error" ;;&
-		'-i') apt-get install moonlight-embedded -y 2> "$error" ;;
+		'-i') apt-get install moonlight-embedded -y  ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
-
-    if [ "$error" != '' ]; then
-		echo "$error"
-		echo -e "ERROR: Something went wrong installing moonlight!"
-		return 1
-	fi
-
 }
 
 function pair_moonlight {
 	echo -e "Once you have input your STEAM PC's IP Address below, you will be given a PIN"
 	echo -e "Input this on the STEAM PC to pair with Moonlight. \n"
 	read -p "Input STEAM PC's IP Address here :`echo $'\n> '`" ip
-	sudo -u pi moonlight pair $ip
-	# fazer validacao para ver se pareou
+	sudo -u pi moonlight pair $ip 2> $error; check_error
 }
 
 function create_menu {
@@ -114,7 +109,7 @@ function create_launch_scripts {
 	fi
 
 	echo -e "Make Scripts Executable"
-	chmod +x 720p30fps.sh
+	chmod +x 720p30fps.sh 
 	chmod +x 720p60fps.sh
 	chmod +x 1080p30fps.sh
 	chmod +x 1080p60fps.sh
@@ -141,10 +136,7 @@ function update_script {
 		rm "$wd"/moonlight.sh
 	fi
 	#wget https://techwiztime.com/moonlight.sh --no-check
-	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check 2> $error
-	if [ "$error" ]; then
-		echo -e "$error"; return 1; 
-	fi
+	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check
 	chown pi:pi "$wd"/moonlight.sh
 	chmod +x "$wd"/moonlight.sh
 }
@@ -152,6 +144,14 @@ function update_script {
 function restart_script {
 	cd "$wd"
 	./moonlight.sh
+}
+
+function check_error {
+    if [ "$error" != '' ]; then
+		echo -e "ERROR: Aborting...\n"
+		echo "$error"
+		return 1
+	fi
 }
 
 echo -e "\n****************************************************************"
