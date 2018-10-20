@@ -136,7 +136,10 @@ function map_controller {
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
 		mkdir -p "$home_dir"/.config/moonlight
 		read -n 1 -s -p "Make sure your controller is plugged in and press anykey to continue"
-		moonlight map "$home_dir"/.config/moonlight/controller.map
+		ls -l /dev/input/by-id
+		echo -e "Type the device name (it's probably one of the eventX): "
+		read -p "> " controller
+		moonlight map -input "$controller" "$home_dir"/.config/moonlight/controller.map
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ]; then
@@ -168,6 +171,7 @@ function set_audio_output {
 		echo -e "Tip: Use aplay -l to see installed devices"
 		echo -e "0 - Audio Jack"
 		echo -e "1 - HDMI"
+		echo -n "> "
 
 		read audio_dev
 		audio_sub="0"
@@ -216,6 +220,7 @@ function restart_script {
 function menu_config_script {
 	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
 		echo -e "Do you wish to remove the configuration menu? (Y)es / (N)o / (0)verwite"
+		echo -n "> "
 		read option
 		case "$option" in
 			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight.sh; return 0 ;;
