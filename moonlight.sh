@@ -2,29 +2,51 @@
 # criar argumento "force" nas funções para sobrescrever os arquivos
 #testar se add_sources funciona com debian stretch
 
+wd="`pwd`"
+home_dir="$/home/pi"
+
 function add_sources {
-	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" /etc/apt/sources.list; then
+	# $1 = jessie or stretch
+	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight $1 main" /etc/apt/sources.list; then
 		echo -e "NOTE: Moonlight Source Exists - Skipping"
 	else
 		echo -e "Adding Moonlight to Sources List"
-		echo "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" >> /etc/apt/sources.list
+		echo "deb http://archive.itimmer.nl/raspbian/moonlight $1 main" >> /etc/apt/sources.list
 	fi
 }
 
 function install_gpg_keys {
-	if [ -f /home/pi/itimmer.gpg ]; then
-		echo -e "NOTE: GPG Key Exists - Skipping"
-	else
-		wget http://archive.itimmer.nl/itimmer.gpg
-		chown pi:pi /home/pi/itimmer.gpg
-		apt-key add itimmer.gpg
-	fi
+	# $1 can be -f to force overwriting
+	if [ -f $home_dir/itimmer.gpg ]; then
+		echo -n "NOTE: GPG Key Exists - "
+		if [ $1 == '-f' ]; then
+			echo -e "Skipping"
+			return 0
+		else
+			echo -e "Overwriting"
+		fi
+	fi	
+
+	wget http://archive.itimmer.nl/itimmer.gpg
+	chown pi:pi $home_dir/itimmer.gpg
+	apt-key add itimmer.gpg
+
 }
 
 function update_and_install_moonlight {
-	apt-get update -y
-	apt-get install moonlight-embedded -y
-	# criar validacao para ver se instalou corretamente
+	# $1 -u to update and install and -i to just install moonlight
+	error=''
+	case $1 in
+		'-u') apt-get update -y 2> $error
+		'-i') apt-get install moonlight-embedded -y 2> $error ;;
+		*) echo -e "Invalid"; return 1;;
+	esac
+
+    if [ $error != '' ]; then
+		echo -e "ERROR: Something went wrong installing moonlight!"
+		return 1
+	fi
+
 }
 
 function pair_moonlight {
@@ -36,51 +58,56 @@ function pair_moonlight {
 }
 
 function create_menu {
-	if [ -f /home/pi/.emulationstation/es_systems.cfg ]
+	if [ -f $home_dir/.emulationstation/es_systems.cfg ]
 	then
 		echo -e "Removing Duplicate Systems File"
-		rm /home/pi/.emulationstation/es_systems.cfg
+		rm $home_dir/.emulationstation/es_systems.cfg
 	fi
 
 	echo -e "Copying Systems Config File"
-	cp /etc/emulationstation/es_systems.cfg /home/pi/.emulationstation/es_systems.cfg
+	cp /etc/emulationstation/es_systems.cfg $home_dir/.emulationstation/es_systems.cfg
 
-	if grep -q "<platform>steam</platform>" /home/pi/.emulationstation/es_systems.cfg; then
+	if grep -q "<platform>steam</platform>" $home_dir/.emulationstation/es_systems.cfg; then
 		echo -e "NOTE: Steam Entry Exists - Skipping"
 	else
 		echo -e "Adding Steam to Systems"
-		sudo sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' /home/pi/.emulationstation/es_systems.cfg
+		sudo sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' $home_dir/.emulationstation/es_systems.cfg
 	fi
 }
 
 function create_launch_scripts {
 	echo -e "Create Script Folder"
-	mkdir -p /home/pi/RetroPie/roms/moonlight
-	cd /home/pi/RetroPie/roms/moonlight
+	mkdir -p $home_dir/RetroPie/roms/moonlight
+	cd $home_dir/RetroPie/roms/moonlight
+
+	if [ $1 == '-f' ]; then
+		echo -e "NOTE: Removing old scripts"
+		remove_launch_scripts
+	fi
 
 	echo -e "Create Scripts"
-	if [ -f /home/pi/RetroPie/roms/moonlight/720p30fps.sh ]; then
+	if [ -f 720p30fps.sh ]; then
 		echo -e "NOTE: 720p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p30fps.sh
 		echo "moonlight stream -720 -fps 30 "$ip"" >>  720p30fps.sh
 	fi
 
-	if [ -f /home/pi/RetroPie/roms/moonlight/720p60fps.sh ]; then
+	if [ -f 720p60fps.sh ]; then
 		echo -e "NOTE: 720p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p60fps.sh
 		echo "moonlight stream -720 -fps 60 "$ip"" >>  720p60fps.sh
 	fi
 
-	if [ -f /home/pi/RetroPie/roms/moonlight/1080p30fps.sh ]; then
+	if [ -f 1080p30fps.sh ]; then
 		echo -e "NOTE: 1080p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p30fps.sh
 		echo "moonlight stream -1080 -fps 30 "$ip"" >>  1080p30fps.sh
 	fi
 
-	if [ -f /home/pi/RetroPie/roms/moonlight/1080p60fps.sh ]; then
+	if [ -f 1080p60fps.sh ]; then
 		echo -e "NOTE: 1080p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p60fps.sh
@@ -92,28 +119,37 @@ function create_launch_scripts {
 	chmod +x 720p60fps.sh
 	chmod +x 1080p30fps.sh
 	chmod +x 1080p60fps.sh
+
+	cd $wd
 }
 
 function remove_launch_scripts {
-	cd /home/pi/RetroPie/roms/moonlight
+	cd $home_dir/RetroPie/roms/moonlight
 	rm *
+	cd $wd
 }
 
 function set_permissions {
 	echo -e "Changing File Permissions"
-	chown -R pi:pi /home/pi/RetroPie/roms/moonlight/
-	chown pi:pi /home/pi/.emulationstation/es_systems.cfg
+	chown -R pi:pi $home_dir/RetroPie/roms/moonlight/
+	chown pi:pi $home_dir/.emulationstation/es_systems.cfg
 }
 
 function update_script {
-	if [ -f /home/pi/moonlight.sh ]
+	if [ -f $wd/moonlight.sh ]
 	then
 		echo -e "Removing Script"
-		rm /home/pi/moonlight.sh
+		rm $wd/moonlight.sh
 	fi
-	wget https://techwiztime.com/moonlight.sh --no-check
-	chown pi:pi /home/pi/moonlight.sh
-	chmod +x moonlight.sh
+	#wget https://techwiztime.com/moonlight.sh --no-check
+	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check
+	chown pi:pi $wd/moonlight.sh
+	chmod +x $wd/moonlight.sh
+}
+
+function restart_script {
+	cd $wd
+	./moonlight.sh
 }
 
 echo -e "\n****************************************************************"
@@ -135,7 +171,7 @@ case $NUM in
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
 		echo -e "****************************************\n"
 
-		add_sources
+		add_sources stretch
 
 		echo -e "\n**** PHASE ONE Complete!!!! ****"
 
@@ -149,15 +185,9 @@ case $NUM in
 		echo -e "\nPHASE THREE: Update System and install moonlight"
 		echo -e "**************************\n"
 		
-		update_and_install_moonlight
+		update_and_install_moonlight -u
 		
 		echo -e "\n**** PHASE THREE Complete!!!! ****"
-		
-		# remover isso aqui
-		#echo -e "\nPHASE FOUR: Install Moonlight"
-		#echo -e "*****************************\n"
-		
-		#echo -e "\n**** PHASE FOUR Complete!!!! ****"
 
 		echo -e "\nPHASE FIVE: Pair Moonlight with PC"
 		echo -e "**********************************\n"
@@ -176,7 +206,7 @@ case $NUM in
 		echo -e "\nPHASE SEVEN: Create 1080p+720p Launch Scripts for RetroPie"
 		echo -e "**********************************************************\n"
 		
-		create_launch_scripts
+		create_launch_scripts -f
 
 		echo -e "\n**** PHASE SEVEN Complete!!!! ****"
 
@@ -193,8 +223,7 @@ case $NUM in
 		read -p "Reboot Now (y/n)?" choice
 		case "$choice" in
 		  y|Y ) shutdown -r now;;
-		  n|N ) cd /home/pi
-		  ./moonlight.sh
+		  n|N ) restart_script
 		  ;;
 		  * ) echo "invalid";;
 		esac
@@ -206,8 +235,7 @@ case $NUM in
 		create_launch_scripts
 
 		echo -e "\n**** 1080p + 720p Launch Scripts Creation Complete!!!! ****"
-		cd /home/pi
-		./moonlight.sh
+		restart_script
 	;;
 	3)
 		echo -e "\nRemove All Steam Launch Scripts"
@@ -216,8 +244,7 @@ case $NUM in
 		remove_launch_scripts
 		
 		echo -e "\n**** Launch Script Removal Complete!!! ****"
-		cd /home/pi
-		./moonlight.sh
+		restart_script
 	;;
 	
 	4)
@@ -227,8 +254,7 @@ case $NUM in
 		pair_moonlight
 
 		echo -e "\n**** Re-Pair Process Complete!!!! ****"
-		cd /home/pi
-		./moonlight.sh
+		restart_script
 	;;
 	
 
@@ -239,8 +265,7 @@ case $NUM in
 		create_menu
 
 		echo -e "\n**** Refreshing Retropie Systems File Complete!!!! ****"
-		cd /home/pi
-		./moonlight.sh
+		restart_script
 	;;
 
 	6)
@@ -248,9 +273,8 @@ case $NUM in
 		echo -e "*****************************\n"
 
 		update_script
-		
-		cd /home/pi
-		./moonlight.sh
+
+		restart_script
 	;;
 	
 	7)
