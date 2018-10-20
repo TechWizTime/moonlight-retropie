@@ -31,7 +31,7 @@ function install_gpg_keys {
 	wget http://archive.itimmer.nl/itimmer.gpg 
 	chown pi:pi "$wd"/itimmer.gpg 
 	apt-key add itimmer.gpg 
-
+	rm "$wd"/itimmer.gpg
 }
 
 function update_and_install_moonlight {
@@ -71,12 +71,13 @@ function create_menu {
 function create_launch_scripts {
 	echo -e "Create Script Folder"
 	mkdir -p "$home_dir"/RetroPie/roms/moonlight
-	cd "$home_dir"/RetroPie/roms/moonlight
 
 	if [ "$1" == '-f' ]; then
 		echo -e "NOTE: Removing old scripts"
 		remove_launch_scripts
 	fi
+
+	cd "$home_dir"/RetroPie/roms/moonlight
 
 	echo -e "Create Scripts"
 	if [ -f ./720p30fps.sh ]; then
@@ -117,9 +118,7 @@ function create_launch_scripts {
 }
 
 function remove_launch_scripts {
-	cd "$home_dir"/RetroPie/roms/moonlight
-	rm *
-	cd "$wd"
+	rm "$home_dir"/RetroPie/roms/moonlight/*
 }
 
 function set_permissions {
