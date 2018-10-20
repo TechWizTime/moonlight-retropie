@@ -21,6 +21,7 @@ function install_gpg_keys {
 		echo -n "NOTE: GPG Key Exists - "
 		if [ "$1" == '-f' ]; then
 			echo -e "Overwriting"
+			rm "$wd"/itimmer.gpg
 		else
 			echo -e "Skipping"
 			return 0
