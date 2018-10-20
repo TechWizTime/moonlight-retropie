@@ -134,7 +134,7 @@ function set_permissions {
 
 function map_controller {
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
-		mkdir "$home_dir"/.config/moonlight
+		mkdir -p "$home_dir"/.config/moonlight
 		read -n 1 -s -p "Make sure your controller is plugged in and press anykey to continue"
 		moonlight map "$home_dir"/.config/moonlight/controller.map
 
