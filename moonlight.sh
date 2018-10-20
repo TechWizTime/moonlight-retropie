@@ -20,10 +20,10 @@ function install_gpg_keys {
 	if [ -f "$home_dir"/itimmer.gpg ]; then
 		echo -n "NOTE: GPG Key Exists - "
 		if [ "$1" == '-f' ]; then
+			echo -e "Overwriting"
+		else
 			echo -e "Skipping"
 			return 0
-		else
-			echo -e "Overwriting"
 		fi
 	fi	
 
@@ -35,10 +35,9 @@ function install_gpg_keys {
 
 function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
-	error=''
 	case "$1" in
-		'-u') apt-get update -y ;;&
-		'-i') apt-get install moonlight-embedded -y  ;;
+		-u) apt-get update -y ;;
+		-i) apt-get install moonlight-embedded -y  ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
 }
@@ -174,6 +173,7 @@ case "$NUM" in
 		echo -e "\nPHASE THREE: Update System and install moonlight"
 		echo -e "**************************\n"
 		update_and_install_moonlight -u
+		update_and_install_moonlight -i
 		echo -e "\n**** PHASE THREE Complete!!!! ****"
 
 		echo -e "\nPHASE FOUR: Pair Moonlight with PC"
