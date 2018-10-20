@@ -128,6 +128,71 @@ function set_permissions {
 	chown pi:pi "$home_dir"/.emulationstation/es_systems.cfg
 }
 
+function map_controller {
+	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
+		mkdir "$home_dir"/.config/moonlight
+		read -n 1 -s -p "Make sure your controller is plugged in and press anykey to continue"
+		moonlight map "$home_dir"/.config/moonlight/controller.map
+
+		cd "$home_dir"/RetroPie/roms/moonlight/
+		if [ -f ./720p30fps.sh ]; then
+			echo "-mapping $home_dir/.config/moonlight/controller.map" >>  720p30fps.sh
+		fi
+
+		if [ -f ./720p60fps.sh ]; then
+			echo "-mapping $home_dir/.config/moonlight/controller.map" >>  720p60fps.sh
+		fi
+
+		if [ -f ./1080p30fps.sh ]; then
+			echo "-mapping $home_dir/.config/moonlight/controller.map" >>  1080p30fps.sh
+		fi
+
+		if [ -f ./1080p60fps.sh ]; then
+			echo "-mapping $home_dir/.config/moonlight/controller.map" >>  1080p60fps.sh
+		fi
+
+		cd "$wd"
+	else 
+		echo -e "You need to generate your launch scripts first."
+		return 0
+	fi
+}
+
+function set_audio_output {
+	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
+		echo -e "Choose your preferred audio output:"
+		echo -e "Tip: Use aplay -l to see installed devices"
+		echo -e "0 - Audio Jack"
+		echo -e "1 - HDMI"
+
+		read audio_dev
+		audio_sub="0"
+		audio_out="hw,$audio_dev,$audio_sub"
+
+		cd "$home_dir"/RetroPie/roms/moonlight/
+		if [ -f ./720p30fps.sh ]; then
+			echo "-audio $audio_out" >>  720p30fps.sh
+		fi
+
+		if [ -f ./720p60fps.sh ]; then
+			echo "-audio $audio_out" >>  720p60fps.sh
+		fi
+
+		if [ -f ./1080p30fps.sh ]; then
+			echo "-audio $audio_out" >>  1080p30fps.sh
+		fi
+
+		if [ -f ./1080p60fps.sh ]; then
+			echo "-audio $audio_out" >>  1080p60fps.sh
+		fi
+
+		cd "$wd"
+	else 
+		echo -e "You need to generate your launch scripts first."
+		return 0
+	fi
+}
+
 function update_script {
 	if [ -f "$wd"/moonlight.sh ]
 	then
@@ -155,6 +220,7 @@ echo -e " * 4: Re Pair Moonlight with PC"
 echo -e " * 5: Refresh SYSTEMS Config File"
 echo -e " * 6: Update This Script"
 echo -e " * 7: Change Default Audio Output"
+echo -e " * 8: Controller Mapping"
 echo -e " * 0: Exit"
 
 read NUM
@@ -248,11 +314,19 @@ case "$NUM" in
 	;;
 	
 	7)
+		echo -e "\nChange default audio output"
 		echo -e "*****************************\n"
-		echo -e "\nWIP"
-		echo -e "*****************************\n"
+		set_audio_output
+		restart_script
 	;;
     
+	8)
+		echo -e "\nMapping the controller"
+		echo -e "**********************************\n"
+		map_controller
+		restart_script
+	;;
+
     0)  exit 1;;
 	*) echo "INVALID NUMBER!" ;;
 esac
