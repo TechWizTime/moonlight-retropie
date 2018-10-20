@@ -1,6 +1,4 @@
 #!/bin/bash
-# criar argumento "force" nas funções para sobrescrever os arquivos
-#testar se add_sources funciona com debian stretch
 
 wd="`pwd`"
 home_dir="$/home/pi"
@@ -37,12 +35,13 @@ function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
 	error=''
 	case $1 in
-		'-u') apt-get update -y 2> $error
+		'-u') apt-get update -y 2> $error ;;&
 		'-i') apt-get install moonlight-embedded -y 2> $error ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
 
     if [ $error != '' ]; then
+		echo "$error"
 		echo -e "ERROR: Something went wrong installing moonlight!"
 		return 1
 	fi
@@ -142,7 +141,10 @@ function update_script {
 		rm $wd/moonlight.sh
 	fi
 	#wget https://techwiztime.com/moonlight.sh --no-check
-	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check
+	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check 2> $error
+	if [ "$error" ]; then
+		echo -e "$error"; return 1; 
+	fi
 	chown pi:pi $wd/moonlight.sh
 	chmod +x $wd/moonlight.sh
 }
@@ -170,52 +172,39 @@ case $NUM in
 	1)
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
 		echo -e "****************************************\n"
-
 		add_sources stretch
-
 		echo -e "\n**** PHASE ONE Complete!!!! ****"
 
 		echo -e "\nPHASE TWO: Fetch and install the GPG key"
 		echo -e "****************************************\n"
-
-		install_gpg_keys
-
+		install_gpg_keys -f
 		echo -e "\n**** PHASE TWO Complete!!!! ****"
 
 		echo -e "\nPHASE THREE: Update System and install moonlight"
 		echo -e "**************************\n"
-		
 		update_and_install_moonlight -u
-		
 		echo -e "\n**** PHASE THREE Complete!!!! ****"
 
-		echo -e "\nPHASE FIVE: Pair Moonlight with PC"
+		echo -e "\nPHASE FOUR: Pair Moonlight with PC"
 		echo -e "**********************************\n"
-		
 		pair_moonlight
-		
+		echo -e "\n**** PHASE FOUR Complete!!!! ****"
+
+		echo -e "\nPHASE FIVE: Create STEAM Menu for RetroPie"
+		echo -e "*****************************************\n"
+		create_menu
 		echo -e "\n**** PHASE FIVE Complete!!!! ****"
 
-		echo -e "\nPHASE SIX: Create STEAM Menu for RetroPie"
-		echo -e "*****************************************\n"
-		
-		create_menu
-		
+		echo -e "\nPHASE SIX: Create 1080p+720p Launch Scripts for RetroPie"
+		echo -e "**********************************************************\n"
+		create_launch_scripts -f
 		echo -e "\n**** PHASE SIX Complete!!!! ****"
 
-		echo -e "\nPHASE SEVEN: Create 1080p+720p Launch Scripts for RetroPie"
-		echo -e "**********************************************************\n"
-		
-		create_launch_scripts -f
-
-		echo -e "\n**** PHASE SEVEN Complete!!!! ****"
-
-		echo -e "\nPHASE EIGHT: Making Everything PI Again :)"
+		echo -e "\nPHASE SEVEN: Making Everything PI Again :)"
 		echo -e "******************************************\n"
-
 		set_permissions
+		echo -e "\n**** PHASE SEVEN Complete!!!! ****\n"
 
-		echo -e "\n**** PHASE EIGHT Complete!!!! ****\n"
 		echo -e "Everything should now be installed and setup correctly."
 		echo -e "To be safe, it's recommended that you perform a reboot now."
 		echo -e "\nIf you don't want to reboot now, press N\n"
@@ -223,47 +212,39 @@ case $NUM in
 		read -p "Reboot Now (y/n)?" choice
 		case "$choice" in
 		  y|Y ) shutdown -r now;;
-		  n|N ) restart_script
-		  ;;
+		  n|N ) restart_script;;
 		  * ) echo "invalid";;
 		esac
 	;;
+
 	2)
 		echo -e "\nCreate 1080p + 720p Launch Scripts for RetroPie"
 		echo -e "***********************************************\n"
-
 		create_launch_scripts
-
 		echo -e "\n**** 1080p + 720p Launch Scripts Creation Complete!!!! ****"
 		restart_script
 	;;
+
 	3)
 		echo -e "\nRemove All Steam Launch Scripts"
 		echo -e "***********************************\n"
-		
 		remove_launch_scripts
-		
 		echo -e "\n**** Launch Script Removal Complete!!! ****"
 		restart_script
 	;;
-	
+
 	4)
 		echo -e "\nRe-Pair Moonlight with another PC"
 		echo -e "*********************************\n"
-
 		pair_moonlight
-
 		echo -e "\n**** Re-Pair Process Complete!!!! ****"
 		restart_script
 	;;
 	
-
 	5)
 		echo -e "\nRefresh RetroPie Systems File"
 		echo -e "*****************************\n"
-
 		create_menu
-
 		echo -e "\n**** Refreshing Retropie Systems File Complete!!!! ****"
 		restart_script
 	;;
@@ -271,9 +252,7 @@ case $NUM in
 	6)
 		echo -e "\nUpdate This Script"
 		echo -e "*****************************\n"
-
 		update_script
-
 		restart_script
 	;;
 	
