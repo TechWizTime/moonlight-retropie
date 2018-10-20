@@ -17,7 +17,7 @@ function add_sources {
 
 function install_gpg_keys {
 	# $1 can be -f to force overwriting
-	if [ -f "$home_dir"/itimmer.gpg ]; then
+	if [ -f "$wd"/itimmer.gpg ]; then
 		echo -n "NOTE: GPG Key Exists - "
 		if [ "$1" == '-f' ]; then
 			echo -e "Overwriting"
@@ -29,7 +29,7 @@ function install_gpg_keys {
 	fi	
 
 	wget http://archive.itimmer.nl/itimmer.gpg 
-	chown pi:pi "$home_dir"/itimmer.gpg 
+	chown pi:pi "$wd"/itimmer.gpg 
 	apt-key add itimmer.gpg 
 
 }
@@ -141,8 +141,7 @@ function update_script {
 }
 
 function restart_script {
-	cd "$wd"
-	./moonlight.sh
+	cd "$wd" && ./moonlight.sh
 }
 
 echo -e "\n****************************************************************"
