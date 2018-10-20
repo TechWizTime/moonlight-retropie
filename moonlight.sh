@@ -139,7 +139,7 @@ function map_controller {
 		ls -l /dev/input/by-id
 		echo -e "Type the device name (it's probably one of the eventX): "
 		read -p "> " controller
-		moonlight map -input "$controller" "$home_dir"/.config/moonlight/controller.map
+		moonlight map -input /dev/"$controller" "$home_dir"/.config/moonlight/controller.map
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ]; then
