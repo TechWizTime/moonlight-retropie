@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e # exit on error
 
-wd="`pwd`"
+if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
+	wd='"$home_dir"/RetroPie/roms/moonlight/moonlight.sh'
+else
+	wd="`pwd`"
+fi
+
 home_dir="/home/pi"
 
 function add_sources {
@@ -210,16 +215,17 @@ function restart_script {
 
 function menu_config_script {
 	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
-		echo -e "Do you wish to remove the configuration menu?(y/N)"
+		echo -e "Do you wish to remove the configuration menu? (Y)es / (N)o / (0)verwite"
 		read option
 		case "$option" in
-			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ;;
+			y|Y) rm "$home_dir"/RetroPie/roms/moonlight/moonlight.sh; return 0 ;;
 			n|N) return 0 ;;
+			o|O) rm "$home_dir"/RetroPie/roms/moonlight/moonlight.sh;;
 			*) echo -e "Invalid."; return 0 ;;
 		esac
-	else
-		ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
 	fi
+	
+	ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
 }
 
 echo -e "$wd"
