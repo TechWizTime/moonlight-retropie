@@ -227,7 +227,7 @@ case "$NUM" in
 	4)
 		echo -e "\nRe-Pair Moonlight with another PC"
 		echo -e "*********************************\n"
-		pair_moonlight
+		# pair_moonlight
 		echo -e "\n**** Re-Pair Process Complete!!!! ****"
 		restart_script
 	;;
