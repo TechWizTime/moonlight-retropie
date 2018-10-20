@@ -1,7 +1,7 @@
 # To-Do
-* criar argumento "force" nas funções para sobrescrever os arquivos
-* testar se add_sources funciona com debian stretch
-* criar validacao para ver se instalou corretamente
+* criar argumento "force" nas funções para sobrescrever os arquivos OK
+* testar se add_sources funciona com debian stretch 
+* criar validacao para ver se instalou corretamente OK
 * fazer validacao para ver se pareou
 * Criar configuração de saida padrão de áudio
 * Criar configuração de controlle

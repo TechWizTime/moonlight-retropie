@@ -4,7 +4,6 @@ set -e # exit on error
 
 wd="`pwd`"
 home_dir="/home/pi"
-error=''
 
 function add_sources {
 	# $1 = jessie or stretch
@@ -38,7 +37,7 @@ function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
 	error=''
 	case "$1" in
-		'-u') apt-get update -y 2> "$error" ;;&
+		'-u') apt-get update -y ;;&
 		'-i') apt-get install moonlight-embedded -y  ;;
 		*) echo -e "Invalid"; return 1;;
 	esac
@@ -48,7 +47,7 @@ function pair_moonlight {
 	echo -e "Once you have input your STEAM PC's IP Address below, you will be given a PIN"
 	echo -e "Input this on the STEAM PC to pair with Moonlight. \n"
 	read -p "Input STEAM PC's IP Address here :`echo $'\n> '`" ip
-	sudo -u pi moonlight pair $ip 2> $error; check_error
+	sudo -u pi moonlight pair $ip 
 }
 
 function create_menu {
@@ -80,28 +79,28 @@ function create_launch_scripts {
 	fi
 
 	echo -e "Create Scripts"
-	if [ -f 720p30fps.sh ]; then
+	if [ -f ./720p30fps.sh ]; then
 		echo -e "NOTE: 720p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p30fps.sh
 		echo "moonlight stream -720 -fps 30 "$ip"" >>  720p30fps.sh
 	fi
 
-	if [ -f 720p60fps.sh ]; then
+	if [ -f ./720p60fps.sh ]; then
 		echo -e "NOTE: 720p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p60fps.sh
 		echo "moonlight stream -720 -fps 60 "$ip"" >>  720p60fps.sh
 	fi
 
-	if [ -f 1080p30fps.sh ]; then
+	if [ -f ./1080p30fps.sh ]; then
 		echo -e "NOTE: 1080p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p30fps.sh
 		echo "moonlight stream -1080 -fps 30 "$ip"" >>  1080p30fps.sh
 	fi
 
-	if [ -f 1080p60fps.sh ]; then
+	if [ -f ./1080p60fps.sh ]; then
 		echo -e "NOTE: 1080p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p60fps.sh
@@ -144,14 +143,6 @@ function update_script {
 function restart_script {
 	cd "$wd"
 	./moonlight.sh
-}
-
-function check_error {
-    if [ "$error" != '' ]; then
-		echo -e "ERROR: Aborting...\n"
-		echo "$error"
-		return 1
-	fi
 }
 
 echo -e "\n****************************************************************"
