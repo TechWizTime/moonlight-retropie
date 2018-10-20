@@ -118,7 +118,8 @@ function create_launch_scripts {
 }
 
 function remove_launch_scripts {
-	rm "$home_dir"/RetroPie/roms/moonlight/*
+	cd "$home_dir"/RetroPie/roms/moonlight/
+	[ "$(ls -A .)" ] && rm * || echo -n ""	
 }
 
 function set_permissions {
