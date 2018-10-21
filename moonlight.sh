@@ -148,8 +148,6 @@ function map_controller {
 		read -p "> " option
 		[ "$option" != '1' ] && return 0 || echo -e "Setting configs...";
 
-		sed -i '/-mapping/p' arquivo.txt
-
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh && `sed -n '/-mapping/p' ./720p30fps.sh` == '' ]; then
 			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 720p30fps.sh
