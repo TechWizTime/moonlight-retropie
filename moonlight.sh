@@ -149,19 +149,19 @@ function map_controller {
 		[ "$option" != '1' ] && return 0 || echo -e "Setting configs...";
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
-		if [ -f ./720p30fps.sh ] && [ `sed -n '/-mapping/p' ./720p30fps.sh` == '' ]; then
+		if [ -f ./720p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p30fps.sh`" ]; then
 			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 720p30fps.sh
 		fi
 
-		if [ -f ./720p60fps.sh ] && [ `sed -n '/-mapping/p' ./720p60fps.sh` == '' ]; then
+		if [ -f ./720p60fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p60fps.sh`" ]; then
 			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 720p60fps.sh
 		fi
 
-		if [ -f ./1080p30fps.sh ] && [ `sed -n '/-mapping/p' ./1080p30fps.sh` == '' ]; then
+		if [ -f ./1080p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./1080p30fps.sh`" ]; then
 			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 1080p30fps.sh
 		fi
 
-		if [ -f ./1080p60fps.sh ] && [ `sed -n '/-mapping/p' ./1080p60fps.sh` == '' ]; then
+		if [ -f ./1080p60fps.sh ] && [ -z "`sed -n '/-mapping/p' ./1080p60fps.sh`" ]; then
 			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 1080p60fps.sh
 		fi
 
