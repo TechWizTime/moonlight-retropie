@@ -146,12 +146,10 @@ function map_controller {
 		echo -e "Type the device name (it's probably one of the eventX): "
 		read -p "> " controller
 
-		erro='';
-		moonlight map -input /dev/input/"$controller" "$home_dir"/.config/moonlight/controller.map 2> $erro
-		if [ ! -z "$erro" ]; then
-			echo -e "Error opening device."
-			return 0
-		fi
+		cp /dev/stdin  myfile.txt
+		touch
+		moonlight map -input /dev/input/"$controller" "$home_dir"/.config/moonlight/controller.map
+		
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p30fps.sh`" ]; then
@@ -185,9 +183,9 @@ function set_audio_output {
 		echo -e "1 - HDMI"
 		echo -n "> "
 
-		read audio_dev
-		audio_sub="0"
-		audio_out="hw,$audio_dev,$audio_sub"
+		read device
+		subdevice="0"
+		audio_out="hw,$device,$subdevice"
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ]; then
@@ -258,7 +256,7 @@ echo -e " * 4: Re Pair Moonlight with PC"
 echo -e " * 5: Refresh SYSTEMS Config File"
 echo -e " * 6: Update This Script"
 echo -e " * 7: Change Default Audio Output"
-echo -e " * 8: Controller Mapping"
+# echo -e " * 8: Controller Mapping"
 echo -e " * 9: Put this Script on the EmulationStation menu"
 echo -e " * 0: Exit"
 echo -n " > "
