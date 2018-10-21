@@ -265,6 +265,7 @@ function set_audio_output {
 
 #create menu entries for sound options
 function sound_menu {
+	config_menu
 	echo "$wd/moonlight.sh 7 0" > "$home_dir"/RetroPie/roms/moonlight/audio\ jack.sh
 	echo "$wd/moonlight.sh 7 1" > "$home_dir"/RetroPie/roms/moonlight/hdmi.sh
 	
@@ -298,7 +299,7 @@ function restart_script {
 }
 
 #add this script to emulation EmulationStation steam menu
-function menu_config_script {
+function config_menu {
 	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
 		echo -e "Do you wish to remove the configuration menu? (Y)es / (N)o / (0)verwite"
 		echo -n "> "
@@ -367,7 +368,7 @@ case "$NUM" in
 		echo -e "\nPHASE SIX: Create 1080p+720p Launch Scripts for RetroPie"
 		echo -e "**********************************************************\n"
 		create_launch_scripts -f
-		menu_config_script
+		config_menu
 		echo -e "\n**** PHASE SIX Complete!!!! ****"
 
 		echo -e "\nPHASE SEVEN: Making Everything PI Again :)"
@@ -453,7 +454,7 @@ case "$NUM" in
 		echo -e "\nCreate menu entry"
 		echo -e "**********************************\n"
 		echo -e "NOTE: You won't be able to interact with this script using a controller!"
-		menu_config_script
+		config_menu
 		restart_script
 	;;
 
