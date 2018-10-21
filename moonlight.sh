@@ -19,7 +19,7 @@ fi
 dir=$( cd -P -- "$(dirname -- "$prg")" && pwd -P ) || exit
 prg=$dir/$(basename -- "$prg") || exit 
 wd="$(dirname `printf '%s\n' $prg`)"
-
+#echo $wd
 user="`whoami`"
 home_dir="$HOME"
 arg="$1"
@@ -39,11 +39,11 @@ function add_sources {
 # fetch and install gpg keys
 function install_gpg_keys {
 	# $1 can be -f to force overwriting
-	if [ -f "$wd"/itimmer.gpg ]; then
+	if [ -f ./itimmer.gpg ]; then
 		echo -n "NOTE: GPG Key Exists - "
 		if [ "$1" == '-f' ]; then
 			echo -e "Overwriting"
-			rm "$wd"/itimmer.gpg
+			rm ./itimmer.gpg
 		else
 			echo -e "Skipping"
 			return 0
@@ -53,7 +53,7 @@ function install_gpg_keys {
 	wget http://archive.itimmer.nl/itimmer.gpg 
 	echo "sudo apt-key add itimmer.gpg"
 	sudo apt-key add itimmer.gpg 
-	rm "$wd"/itimmer.gpg
+	rm ./itimmer.gpg
 }
 
 # update system and install moonlight
@@ -311,7 +311,7 @@ function config_menu {
 		esac
 	fi
 	
-	ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
+	ln $wd/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
 }
 
 #you can call the script passing one of the menu options as the first arg
@@ -353,7 +353,7 @@ case "$NUM" in
 
 		echo -e "\nPair Moonlight with PC"
 		echo -e "**********************************\n"
-	#	pair_moonlight
+		pair_moonlight
 
 		echo -e "\nCreate STEAM Menu for RetroPie"
 		echo -e "*****************************************\n"
@@ -361,8 +361,7 @@ case "$NUM" in
 
 		echo -e "\nCreate 1080p+720p Launch Scripts for RetroPie"
 		echo -e "**********************************************************\n"
-		create_launch_scripts -f
-		config_menu
+		create_launch_scripts
 
 		echo -e "\nMaking Everything PI Again :)"
 		echo -e "******************************************\n"
