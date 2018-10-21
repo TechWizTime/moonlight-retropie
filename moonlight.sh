@@ -434,7 +434,7 @@ case "$NUM" in
 		read -p "> " opt 
 		case $opt in
 			y|Y)
-				create_sound_menu
+				sound_menu
 				echo -e "Menu entries created" ;;
 			*) 
 				echo -e "No";;
