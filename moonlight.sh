@@ -145,7 +145,13 @@ function map_controller {
 		ls -l /dev/input/by-id
 		echo -e "Type the device name (it's probably one of the eventX): "
 		read -p "> " controller
-		moonlight map -input /dev/input/"$controller" "$home_dir"/.config/moonlight/controller.map
+
+		erro='';
+		moonlight map -input /dev/input/"$controller" "$home_dir"/.config/moonlight/controller.map 2> $erro
+		if [ ! -z "$erro" ]; then
+			echo -e "Error opening device."
+			return 0
+		fi
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p30fps.sh`" ]; then
