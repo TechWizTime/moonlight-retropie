@@ -1,13 +1,22 @@
-# To-Do
-* criar argumento "force" nas funções para sobrescrever os arquivos OK
-* testar se add_sources funciona com debian stretch OK
-* criar validacao para ver se instalou corretamente OK
-* fazer validacao para ver se pareou OK
-* Criar configuração de saida padrão de áudio
-* Criar configuração de controlle
-* 8 usar sed para editar as configurações
+# moonlight.sh
 
-# --------- ORIGINAL README ---------
+## What is new
+
+- Now you don't need to be root to run this script (still need to provide your password!)
+- Refactored the code, now it's a little bit easier to maintain since it's function based
+- The script can be run from anywhere in the system now, not only $HOME!
+- Now you can choose your sound device (HDMI or Audio Jack) 
+- Created 3 new menu entries: 1 - This very own script, 2 - Change sound out to HDMI and 3 -Change sound out to audio jack
+- Created a (crude) command line interface. Now you can pass a number as an argument for this script
+- Now there's some what of a error handling, so if something happens along the way you'll actually see it
+- It'll use the debian strech repo, so no more libssl1.0 errors when installing (need to test this in a new system)
+- 
+
+# To-Do
+- Controller mapping (it's not a priority, since most controllers work out-of-the-box)
+
+
+# --------- ORIGINAL TECHWIZTIME README ---------
 
 # moonlight-retropie
 The Install &amp; Setup Script for Moonlight within RetroPie 4.2+ from **TechWizTime**

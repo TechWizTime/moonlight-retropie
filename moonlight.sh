@@ -51,7 +51,6 @@ function install_gpg_keys {
 	fi	
 
 	wget http://archive.itimmer.nl/itimmer.gpg 
-	#chown pi:pi "$wd"/itimmer.gpg 
 	echo "sudo apt-key add itimmer.gpg"
 	sudo apt-key add itimmer.gpg 
 	rm "$wd"/itimmer.gpg
@@ -339,42 +338,35 @@ fi
 
 case "$NUM" in
 	1)
-		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
+		echo -e "\nAdd Moonlight to Sources List"
 		echo -e "****************************************\n"
 		add_sources stretch
-		echo -e "\n**** PHASE ONE Complete!!!! ****"
 
-		echo -e "\nPHASE TWO: Fetch and install the GPG key"
+		echo -e "\nFetch and install the GPG key"
 		echo -e "****************************************\n"
 		install_gpg_keys -f
-		echo -e "\n**** PHASE TWO Complete!!!! ****"
 
-		echo -e "\nPHASE THREE: Update System and install moonlight"
+		echo -e "\nUpdate System and install moonlight"
 		echo -e "**************************\n"
 		update_and_install_moonlight -u
 		update_and_install_moonlight -i
-		echo -e "\n**** PHASE THREE Complete!!!! ****"
 
-		echo -e "\nPHASE FOUR: Pair Moonlight with PC"
+		echo -e "\nPair Moonlight with PC"
 		echo -e "**********************************\n"
 	#	pair_moonlight
-		echo -e "\n**** PHASE FOUR Complete!!!! ****"
 
-		echo -e "\nPHASE FIVE: Create STEAM Menu for RetroPie"
+		echo -e "\nCreate STEAM Menu for RetroPie"
 		echo -e "*****************************************\n"
 		create_menu
-		echo -e "\n**** PHASE FIVE Complete!!!! ****"
 
-		echo -e "\nPHASE SIX: Create 1080p+720p Launch Scripts for RetroPie"
+		echo -e "\nCreate 1080p+720p Launch Scripts for RetroPie"
 		echo -e "**********************************************************\n"
 		create_launch_scripts -f
 		config_menu
-		echo -e "\n**** PHASE SIX Complete!!!! ****"
 
-		echo -e "\nPHASE SEVEN: Making Everything PI Again :)"
+		echo -e "\nMaking Everything PI Again :)"
 		echo -e "******************************************\n"
 		set_permissions
-		echo -e "\n**** PHASE SEVEN Complete!!!! ****\n"
 
 		echo -e "Everything should now be installed and setup correctly."
 		echo -e "To be safe, it's recommended that you perform a reboot now."
