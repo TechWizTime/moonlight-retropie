@@ -5,6 +5,7 @@
 * fazer validacao para ver se pareou OK
 * Criar configuração de saida padrão de áudio
 * Criar configuração de controlle
+* 8 usar sed para editar as configurações
 
 # --------- ORIGINAL README ---------
 
