@@ -1,13 +1,19 @@
 #!/bin/bash
 set -e # exit on error
 
+user="`whoami`"
+home_dir=/home/"$user"
+
+if [ "$user" == "root" ]; then
+	echo -e "This script can't be run as root\nExiting..."
+	return -1
+fi
+
 if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
 	wd="$home_dir"/RetroPie/roms/moonlight
 else
 	wd="`pwd`"
 fi
-
-home_dir="/home/pi"
 
 function add_sources {
 	# $1 = jessie or stretch
@@ -140,29 +146,22 @@ function map_controller {
 		echo -e "Type the device name (it's probably one of the eventX): "
 		read -p "> " controller
 		moonlight map -input /dev/input/"$controller" "$home_dir"/.config/moonlight/controller.map
-		
-		echo -e "If you already have the controller mapped to your scripts you can exit now."
-		echo -e "WARNING: If you proceed anyway you'll have to recreat the launch scripts!"
-		echo -e "0 - Exit"
-		echo -e "1 - Continue"
-		read -p "> " option
-		[ "$option" != '1' ] && return 0 || echo -e "Setting configs...";
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p30fps.sh`" ]; then
-			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 720p30fps.sh
+			sed -i "s/^moonlight.*/& -mapping \/home\/$user\/.config\/moonlight\/controller.map/" 720p30fps.sh
 		fi
 
 		if [ -f ./720p60fps.sh ] && [ -z "`sed -n '/-mapping/p' ./720p60fps.sh`" ]; then
-			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 720p60fps.sh
+			sed -i "s/^moonlight.*/& -mapping \/home\/$user\/.config\/moonlight\/controller.map/" 720p60fps.sh
 		fi
 
 		if [ -f ./1080p30fps.sh ] && [ -z "`sed -n '/-mapping/p' ./1080p30fps.sh`" ]; then
-			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 1080p30fps.sh
+			sed -i "s/^moonlight.*/& -mapping \/home\/$user\/.config\/moonlight\/controller.map/" 1080p30fps.sh
 		fi
 
 		if [ -f ./1080p60fps.sh ] && [ -z "`sed -n '/-mapping/p' ./1080p60fps.sh`" ]; then
-			sed -i "s/^moonlight.*/& -mapping $home_dir\/.config\/moonlight\/controller.map/" 1080p60fps.sh
+			sed -i "s/^moonlight.*/& -mapping \/home\/$user\/.config\/moonlight\/controller.map/" 1080p60fps.sh
 		fi
 
 		cd "$wd"
