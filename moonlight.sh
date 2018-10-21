@@ -1,20 +1,31 @@
 #!/bin/bash
 set -e # exit on error
 
-user="`whoami`"
-home_dir=/home/"$user"
-
+# validate if root
 if [ "$user" == "root" ]; then
-	echo -e "This script can't be run as root\nExiting..."
-	return -1
+	echo -e "This script isn't supposed to be run as root\nExiting..."
+	exit 0
 fi
 
-if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
-	wd="$home_dir"/RetroPie/roms/moonlight
-else
-	wd="`pwd`"
+#get current dir from this answer
+#https://stackoverflow.com/a/630645
+prg=$0
+if [ ! -e "$prg" ]; then
+  case $prg in
+    (*/*) exit 1;;
+    (*) prg=$(wich -v -- "$prg") || exit;;
+  esac
 fi
+dir=$( cd -P -- "$(dirname -- "$prg")" && pwd -P ) || exit
+prg=$dir/$(basename -- "$prg") || exit 
+wd="$(dirname `printf '%s\n' $prg`)"
+echo $wd
 
+user="`whoami`"
+home_dir="$HOME"
+arg="$1"
+
+# add sources for moonlight
 function add_sources {
 	# $1 = jessie or stretch
 	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" /etc/apt/sources.list; then
@@ -25,6 +36,7 @@ function add_sources {
 	fi
 }
 
+# fetch and install gpg keys
 function install_gpg_keys {
 	# $1 can be -f to force overwriting
 	if [ -f "$wd"/itimmer.gpg ]; then
@@ -39,11 +51,12 @@ function install_gpg_keys {
 	fi	
 
 	wget http://archive.itimmer.nl/itimmer.gpg 
-	sudo chown pi:pi "$wd"/itimmer.gpg 
-	sudo apt-key add itimmer.gpg 
+	#chown pi:pi "$wd"/itimmer.gpg 
+	apt-key add itimmer.gpg 
 	rm "$wd"/itimmer.gpg
 }
 
+# update system and install moonlight
 function update_and_install_moonlight {
 	# $1 -u to update and install and -i to just install moonlight
 	case "$1" in
@@ -53,6 +66,7 @@ function update_and_install_moonlight {
 	esac
 }
 
+# pair moonlight with steam pc
 function pair_moonlight {
 	echo -e "Once you have input your STEAM PC's IP Address below, you will be given a PIN"
 	echo -e "Input this on the STEAM PC to pair with Moonlight. \n"
@@ -60,24 +74,26 @@ function pair_moonlight {
 	sudo -u pi moonlight pair $ip 
 }
 
+#create steam menu
 function create_menu {
 	if [ -f "$home_dir"/.emulationstation/es_systems.cfg ]
 	then
 		echo -e "Removing Duplicate Systems File"
-		sudo rm "$home_dir"/.emulationstation/es_systems.cfg
+		rm "$home_dir"/.emulationstation/es_systems.cfg
 	fi
 
 	echo -e "Copying Systems Config File"
-	sudo cp /etc/emulationstation/es_systems.cfg "$home_dir"/.emulationstation/es_systems.cfg
+	cp /etc/emulationstation/es_systems.cfg "$home_dir"/.emulationstation/es_systems.cfg
 
 	if grep -q "<platform>steam</platform>" "$home_dir"/.emulationstation/es_systems.cfg; then
 		echo -e "NOTE: Steam Entry Exists - Skipping"
 	else
 		echo -e "Adding Steam to Systems"
-		sudo sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' "$home_dir"/.emulationstation/es_systems.cfg
+		sed -i -e 's|</systemList>|  <system>\n    <name>steam</name>\n    <fullname>Steam</fullname>\n    <path>~/RetroPie/roms/moonlight</path>\n    <extension>.sh .SH</extension>\n    <command>bash %ROM%</command>\n    <platform>steam</platform>\n    <theme>steam</theme>\n  </system>\n</systemList>|g' "$home_dir"/.emulationstation/es_systems.cfg
 	fi
 }
 
+#add steam launch scripts
 function create_launch_scripts {
 	echo -e "Create Script Folder"
 	mkdir -p "$home_dir"/RetroPie/roms/moonlight
@@ -127,18 +143,27 @@ function create_launch_scripts {
 	cd "$wd"
 }
 
+#remove steam laucnh scripts
 function remove_launch_scripts {
 	cd "$home_dir"/RetroPie/roms/moonlight/
 	[ "$(ls -A .)" ] && rm * || echo -n ""	
 }
 
+#define files permissions -- Not sure if this is really needed but I'll leave it here
 function set_permissions {
 	echo -e "Changing File Permissions"
 	sudo chown -R pi:pi "$home_dir"/RetroPie/roms/moonlight/
 	sudo chown pi:pi "$home_dir"/.emulationstation/es_systems.cfg
 }
 
+#change controller mapping -- currrently doesn't work
 function map_controller {
+	echo -e "\nWIP\n"
+	return 0
+
+	#possible solution
+	#https://retropie.org.uk/forum/topic/11225/moonlight-no-mapping-available-for-dev-input-event2-030000005e040000a102000007010000
+
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
 		mkdir -p "$home_dir"/.config/moonlight
 		read -n 1 -s -p "Make sure your controller is plugged in and press anykey to continue"
@@ -175,8 +200,12 @@ function map_controller {
 	fi
 }
 
+#change default audio output
 function set_audio_output {
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
+		if [ -z "$arg" ]; then
+			echo e
+		fi
 		echo -e "Choose your preferred audio output:"
 		echo -e "Tip: Use aplay -l to see installed devices"
 		echo -e "0 - Audio Jack"
@@ -207,26 +236,41 @@ function set_audio_output {
 		cd "$wd"
 	else 
 		echo -e "You need to generate your launch scripts first."
-		return 0
+		return 1
 	fi
 }
 
+function create_sound_menu {
+	echo -e "WIP"
+	touch "$home_dir"/RetroPie/roms/moonlight/HDMI.sh
+	touch "$home_dir"/RetroPie/roms/moonlight/AUDIO\ JACK.sh
+}
+
+#update this script
 function update_script {
-	if [ -f "$wd"/moonlight.sh ]
+	cd "$wd"	
+	if [ -f ./moonlight.sh ]
 	then
 		echo -e "Removing Script"
-		rm "$wd"/moonlight.sh
+		rm ./moonlight.sh
 	fi
+
 	#wget https://techwiztime.com/moonlight.sh --no-check
 	wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh --no-check
-	sudo chown pi:pi "$wd"/moonlight.sh
-	sudo chmod +x "$wd"/moonlight.sh
+	if [ ! -x ./moonlight ]; then
+		echo "Making it executable"
+		sudo chmod +x "$wd"/moonlight.sh
+	fi
 }
 
+#restart this script
 function restart_script {
-	cd "$wd" && ./moonlight.sh
+	if [ -z $arg ]; then 
+		"$wd"/moonlight.sh
+	fi
 }
 
+#add this script to emulation EmulationStation steam menu
 function menu_config_script {
 	if [ -f "$home_dir"/RetroPie/roms/moonlight/moonlight.sh ]; then
 		echo -e "Do you wish to remove the configuration menu? (Y)es / (N)o / (0)verwite"
@@ -243,25 +287,28 @@ function menu_config_script {
 	ln "$wd"/moonlight.sh "$home_dir"/RetroPie/roms/moonlight/moonlight.sh
 }
 
-echo -e "$wd"
-echo -e "\n******************************************************
-**********"
-echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
-echo -e "****************************************************************\n"
-echo -e "Select an option:"
-echo -e " * 1: Install Moonlight, Pair, Install Scripts, Install Menus"
-echo -e " * 2: Install Launch Scripts"
-echo -e " * 3: Remove Launch Scripts"
-echo -e " * 4: Re Pair Moonlight with PC"
-echo -e " * 5: Refresh SYSTEMS Config File"
-echo -e " * 6: Update This Script"
-echo -e " * 7: Change Default Audio Output"
-# echo -e " * 8: Controller Mapping"
-echo -e " * 9: Put this Script on the EmulationStation menu"
-echo -e " * 0: Exit"
-echo -n " > "
+#you can call the script passing one of the menu options as the first arg
+if [ $# -eq 0 ]; then
+	echo -e "\n****************************************************************"
+	echo -e "Welcome to the Moonlight Installer Script for RetroPie v17.10.07"
+	echo -e "****************************************************************\n"
+	echo -e "Select an option:"
+	echo -e " * 1: Install Moonlight, Pair, Install Scripts, Install Menus"
+	echo -e " * 2: Install Launch Scripts"
+	echo -e " * 3: Remove Launch Scripts"
+	echo -e " * 4: Re Pair Moonlight with PC"
+	echo -e " * 5: Refresh SYSTEMS Config File"
+	echo -e " * 6: Update This Script"
+	echo -e " * 7: Change Default Audio Output"
+	echo -e " * 8: Controller Mapping"
+	echo -e " * 9: Put this Script on the EmulationStation menu"
+	echo -e " * 0: Exit"
+	echo -n " > "
+	read NUM
+else
+	NUM=$arg
+fi
 
-read NUM
 case "$NUM" in
 	1)
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
@@ -293,6 +340,7 @@ case "$NUM" in
 		echo -e "\nPHASE SIX: Create 1080p+720p Launch Scripts for RetroPie"
 		echo -e "**********************************************************\n"
 		create_launch_scripts -f
+		menu_config_script
 		echo -e "\n**** PHASE SIX Complete!!!! ****"
 
 		echo -e "\nPHASE SEVEN: Making Everything PI Again :)"
@@ -306,7 +354,7 @@ case "$NUM" in
 
 		read -p "Reboot Now (y/n)? " choice
 		case "$choice" in
-		  y|Y ) sudo shutdown -r now;;
+		  y|Y ) shutdown -r now;;
 		  n|N ) restart_script;;
 		  * ) echo "invalid";;
 		esac
@@ -355,6 +403,15 @@ case "$NUM" in
 		echo -e "\nChange default audio output"
 		echo -e "*****************************\n"
 		set_audio_output
+		echo -e "\nCreate shortcuts in EmulationStation Steam menu? (y/n)"
+		read -p "> " opt 
+		case $opt in
+			y|Y)
+				create_sound_menu
+				echo -e "Menu entries created" ;;
+			*) 
+				echo -e "No";;
+		esac
 		restart_script
 	;;
     
@@ -373,6 +430,8 @@ case "$NUM" in
 		restart_script
 	;;
 
-    0)  exit 1;;
+    0) exit 1;;
 	*) echo "INVALID NUMBER!" ;;
 esac
+
+exit 0
