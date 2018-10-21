@@ -52,7 +52,8 @@ function install_gpg_keys {
 
 	wget http://archive.itimmer.nl/itimmer.gpg 
 	#chown pi:pi "$wd"/itimmer.gpg 
-	apt-key add itimmer.gpg 
+	echo "sudo apt-key add itimmer.gpg"
+	sudo apt-key add itimmer.gpg 
 	rm "$wd"/itimmer.gpg
 }
 
