@@ -265,11 +265,11 @@ function set_audio_output {
 #create menu entries for sound options
 function sound_menu {
 	config_menu
-	echo "$wd/moonlight.sh 7 0" > "$home_dir"/RetroPie/roms/moonlight/audio\ jack.sh
+	echo "$wd/moonlight.sh 7 0" > "$home_dir"/RetroPie/roms/moonlight/audio_jack.sh
 	echo "$wd/moonlight.sh 7 1" > "$home_dir"/RetroPie/roms/moonlight/hdmi.sh
 	
 	echo -e "Make executable"
-	sudo chmod +x "$home_dir"/RetroPie/roms/moonlight/audio\ jack.sh
+	sudo chmod +x "$home_dir"/RetroPie/roms/moonlight/audio_jack.sh
 	sudo chmod +x "$home_dir"/RetroPie/roms/moonlight/hdmi.sh
 }
 
