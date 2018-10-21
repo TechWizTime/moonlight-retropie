@@ -6,11 +6,18 @@
 - Refactored the code, now it's a little bit easier to maintain since it's function based
 - The script can be run from anywhere in the system now, not only $HOME!
 - Now you can choose your sound device (HDMI or Audio Jack) 
-- Created 3 new menu entries: 1 - This very own script, 2 - Change sound out to HDMI and 3 -Change sound out to audio jack
+- Created 3 new menu entries: 
+
+    1 - This (moonlight.sh) script, 
+    
+    2 - Change sound out to HDMI
+    
+    3 - Change sound out to Audio jack
+    
 - Created a (crude) command line interface. Now you can pass a number as an argument for this script
 - Now there's some what of a error handling, so if something happens along the way you'll actually see it
 - It'll use the debian strech repo, so no more libssl1.0 errors when installing (need to test this in a new system)
-- 
+
 
 # To-Do
 - Controller mapping (it's not a priority, since most controllers work out-of-the-box)
