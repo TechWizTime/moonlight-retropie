@@ -19,11 +19,11 @@ fi
 dir=$( cd -P -- "$(dirname -- "$prg")" && pwd -P ) || exit
 prg=$dir/$(basename -- "$prg") || exit 
 wd="$(dirname `printf '%s\n' $prg`)"
-echo $wd
 
 user="`whoami`"
 home_dir="$HOME"
 arg="$1"
+arg1="$2"
 
 # add sources for moonlight
 function add_sources {
@@ -111,28 +111,28 @@ function create_launch_scripts {
 		echo -e "NOTE: 720p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p30fps.sh
-		echo "moonlight stream -720 -fps 30 -audio hw:0,0 "$ip"" >>  720p30fps.sh
+		echo "moonlight stream -720 -fps 30 "$ip"" >>  720p30fps.sh
 	fi
 
 	if [ -f ./720p60fps.sh ]; then
 		echo -e "NOTE: 720p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 720p60fps.sh
-		echo "moonlight stream -720 -fps 60 -audio hw:0,0 "$ip"" >>  720p60fps.sh
+		echo "moonlight stream -720 -fps 60 "$ip"" >>  720p60fps.sh
 	fi
 
 	if [ -f ./1080p30fps.sh ]; then
 		echo -e "NOTE: 1080p30fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p30fps.sh
-		echo "moonlight stream -1080 -fps 30 -audio hw:0,0 "$ip"" >>  1080p30fps.sh
+		echo "moonlight stream -1080 -fps 30 "$ip"" >>  1080p30fps.sh
 	fi
 
 	if [ -f ./1080p60fps.sh ]; then
 		echo -e "NOTE: 1080p60fps Exists - Skipping"
 	else
 		echo "#!/bin/bash" > 1080p60fps.sh
-		echo "moonlight stream -1080 -fps 60 -audio hw:0,0 "$ip"" >>  1080p60fps.sh
+		echo "moonlight stream -1080 -fps 60 "$ip"" >>  1080p60fps.sh
 	fi
 
 	echo -e "Make Scripts Executable"
@@ -202,36 +202,52 @@ function map_controller {
 }
 
 #change default audio output
+#could be updated to set subdevices, but i'm not sure how that works
 function set_audio_output {
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
-		if [ -z "$arg" ]; then
-			echo e
-		fi
-		echo -e "Choose your preferred audio output:"
-		echo -e "Tip: Use aplay -l to see installed devices"
-		echo -e "0 - Audio Jack"
-		echo -e "1 - HDMI"
-		echo -n "> "
+		if [ ! -z "$1" ]; then
+			device="$1"
+			subdevice="0"
+		else
+			echo -e "Choose your preferred audio output:"
+			echo -e "Tip: Use aplay -l to see installed devices"
+			echo -e "0 - Audio Jack"
+			echo -e "1 - HDMI"
+			echo -n "> "
 
-		read device
-		subdevice="0"
+			read device
+			subdevice="0"
+		fi
+
 		audio_out="hw,$device,$subdevice"
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ]; then
+			if [ -z "`sed -n '/-audio/p' ./720p30fps.sh`" ]; then
+				sed -i "s/^moonlight.*/& -audio hw:0,0/" 720p30fps.sh
+			fi
 			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 720p30fps.sh
 		fi
 
 		if [ -f ./720p60fps.sh ]; then
-			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 720p30fps.sh
+			if [ -z "`sed -n '/-audio/p' ./720p60fps.sh`" ]; then
+				sed -i "s/^moonlight.*/& -audio hw:0,0/" 720p60fps.sh
+			fi
+			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 720p60fps.sh
 		fi
 
 		if [ -f ./1080p30fps.sh ]; then
-			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 720p30fps.sh
+			if [ -z "`sed -n '/-audio/p' ./1080p30fps.sh`" ]; then
+				sed -i "s/^moonlight.*/& -audio hw:0,0/" 1080p30fps.sh
+			fi
+			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 1080p30fps.sh
 		fi
 
 		if [ -f ./1080p60fps.sh ]; then
-			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 720p30fps.sh
+			if [ -z "`sed -n '/-audio/p' ./1080p60fps.sh`" ]; then
+				sed -i "s/^moonlight.*/& -audio hw:0,0/" 1080p60fps.sh
+			fi
+			sed -i "s/hw:[[:digit:]],[[:digit:]]/$audio_out/" 1080p60fps.sh
 		fi
 
 		cd "$wd"
@@ -239,12 +255,18 @@ function set_audio_output {
 		echo -e "You need to generate your launch scripts first."
 		return 1
 	fi
+
+	if [ -z $1 ]; then
+		exit 0
+	fi
+
 }
 
 function create_sound_menu {
 	echo -e "WIP"
-	touch "$home_dir"/RetroPie/roms/moonlight/HDMI.sh
-	touch "$home_dir"/RetroPie/roms/moonlight/AUDIO\ JACK.sh
+	echo "$wd/moonlight.sh 7 0" > "$home_dir"/RetroPie/roms/moonlight/audio\ jack.sh
+	echo "$wd/moonlight.sh 7 1" > "$home_dir"/RetroPie/roms/moonlight/hdmi.sh
+
 }
 
 #update this script
@@ -300,7 +322,7 @@ if [ $# -eq 0 ]; then
 	echo -e " * 4: Re Pair Moonlight with PC"
 	echo -e " * 5: Refresh SYSTEMS Config File"
 	echo -e " * 6: Update This Script"
-	echo -e " * 7: Change Default Audio Output"
+	echo -e " * 7: Audio Output options"
 	echo -e " * 8: Controller Mapping"
 	echo -e " * 9: Put this Script on the EmulationStation menu"
 	echo -e " * 0: Exit"
@@ -403,7 +425,7 @@ case "$NUM" in
 	7)
 		echo -e "\nChange default audio output"
 		echo -e "*****************************\n"
-		set_audio_output
+		set_audio_output "$arg2"
 		echo -e "\nCreate shortcuts in EmulationStation Steam menu? (y/n)"
 		read -p "> " opt 
 		case $opt in
