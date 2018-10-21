@@ -204,8 +204,11 @@ function map_controller {
 #change default audio output
 #could be updated to set subdevices, but i'm not sure how that works
 function set_audio_output {
+		echo "$arg"
+		echo "$arg1"
 	if [ "$(ls -A $home_dir/RetroPie/roms/moonlight/)" ]; then
-		if [ ! -z "$1" ]; then
+
+		if [ "$arg1" ]; then
 			device="$1"
 			subdevice="0"
 		else
@@ -219,7 +222,7 @@ function set_audio_output {
 			subdevice="0"
 		fi
 
-		audio_out="hw,$device,$subdevice"
+		audio_out="hw:$device,$subdevice"
 
 		cd "$home_dir"/RetroPie/roms/moonlight/
 		if [ -f ./720p30fps.sh ]; then
@@ -256,8 +259,8 @@ function set_audio_output {
 		return 1
 	fi
 
-	if [ -z $1 ]; then
-		exit 0
+	if [ "$arg1" ]; then
+		return 1
 	fi
 
 }
