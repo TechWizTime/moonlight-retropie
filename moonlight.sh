@@ -14,18 +14,17 @@ echo -e " * *: NEW MENU ITEMS *"
 echo -e " * 7: Refresh SYSTEMS Config File"
 echo -e " * 8: Update This Script"
 
-
 read NUM
 case $NUM in
 	1)
 		echo -e "\nPHASE ONE: Add Moonlight to Sources List"
 		echo -e "****************************************\n"
 		
-		if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" /etc/apt/sources.list; then
+		if grep -q"deb https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-embedded/deb/raspbian $(lsb_release -sc) main" /etc/apt/sources.list; then
 			echo -e "NOTE: Moonlight Source Exists - Skipping"
 		else
 			echo -e "Adding Moonlight to Sources List"
-			echo "deb http://archive.itimmer.nl/raspbian/moonlight jessie main" >> /etc/apt/sources.list
+			echo "deb https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-embedded/deb/raspbian $(lsb_release -sc) main" >> /etc/apt/sources.list
 		fi
 		
 		echo -e "\n**** PHASE ONE Complete!!!! ****"
@@ -33,13 +32,13 @@ case $NUM in
 		echo -e "\nPHASE TWO: Fetch and install the GPG key"
 		echo -e "****************************************\n"
 		
-		if [ -f /home/pi/itimmer.gpg ]
+		if [ -f /home/pi/moonlight.key ]
 		then	
 			echo -e "NOTE: GPG Key Exists - Skipping"
 		else		
-			wget http://archive.itimmer.nl/itimmer.gpg
-			chown pi:pi /home/pi/itimmer.gpg
-			apt-key add itimmer.gpg		
+			wget https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-embedded/gpg.5AEE46706CF0453E.key -O moonlight.key
+			chown pi:pi /home/pi/moonlight.key
+			apt-key add moonlight.key		
 		fi
 
 		echo -e "\n**** PHASE TWO Complete!!!! ****"
