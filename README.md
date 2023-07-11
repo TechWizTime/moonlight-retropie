@@ -40,7 +40,7 @@ This script currently will do the following:
 ## How to use this
 In RetroPie, go to the Command Line and type the following to download the script:
 ```
-wget https://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh
+wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh
 ```
 ```
 sudo chmod +x moonlight.sh
@@ -53,7 +53,7 @@ sudo ./moonlight.sh
 ## If you get a TLS or SSL Error
 Sometimes, this can happen when trying to wget the script above. If it does, try this wget command instead
 ```
-wget https://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh  --no-check
+wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh  --no-check
 ```
 
 And if you are feeling particulary lazy, here's a shortlink via my website
