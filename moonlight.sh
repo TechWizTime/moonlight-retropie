@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e # exit on error
 
+REPO_FILE="/etc/apt/sources.list.d/moonlight-game-streaming-moonlight-embedded.list"
+
 # validate if root
 if [ "$user" == "root" ]; then
 	echo -e "This script isn't supposed to be run as root\nExiting..."
@@ -28,11 +30,13 @@ arg1="$2"
 # add sources for moonlight
 function add_sources {
 	# $1 = jessie or stretch
-	if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" /etc/apt/sources.list; then
+	#if grep -q "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" /etc/apt/sources.list; then
+        if [ -f "$REPO_FILE" ]; then
 		echo -e "NOTE: Moonlight Source Exists - Skipping"
 	else
 		echo -e "Adding Moonlight to Sources List"
-		echo "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" >> /etc/apt/sources.list
+		#echo "deb http://archive.itimmer.nl/raspbian/moonlight "$1" main" >> /etc/apt/sources.list
+                curl -1sLf 'https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-embedded/setup.deb.sh' | distro=raspbian codename=$(lsb_release -sc) sudo -E bash
 	fi
 }
 
@@ -342,9 +346,9 @@ case "$NUM" in
 		echo -e "****************************************\n"
 		add_sources stretch
 
-		echo -e "\nFetch and install the GPG key"
-		echo -e "****************************************\n"
-		install_gpg_keys -f
+		#echo -e "\nFetch and install the GPG key"
+		#echo -e "****************************************\n"
+		#install_gpg_keys -f
 
 		echo -e "\nUpdate System and install moonlight"
 		echo -e "**************************\n"
