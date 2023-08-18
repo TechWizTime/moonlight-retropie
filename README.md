@@ -1,3 +1,30 @@
+# moonlight.sh
+
+## What is new
+
+- Now you don't need to be root to run this script (still need to provide your password!)
+- Refactored the code, now it's a little bit easier to maintain since it's function based
+- The script can be run from anywhere in the system now, not only $HOME!
+- Now you can choose your sound device (HDMI or Audio Jack) 
+- Created 3 new menu entries: 
+
+    1 - This (moonlight.sh) script, 
+    
+    2 - Change sound out to HDMI
+    
+    3 - Change sound out to Audio jack
+    
+- Created a (crude) command line interface. Now you can pass a number as an argument for this script
+- Now there's some what of a error handling, so if something happens along the way you'll actually see it
+- It'll use the debian strech repo, so no more libssl1.0 errors when installing (need to test this in a new system)
+
+
+# To-Do
+- Controller mapping (it's not a priority, since most controllers work out-of-the-box)
+
+
+# --------- ORIGINAL TECHWIZTIME README ---------
+
 # moonlight-retropie
 The Install &amp; Setup Script for Moonlight within RetroPie 4.2+ from **TechWizTime**
 
@@ -13,7 +40,7 @@ This script currently will do the following:
 ## How to use this
 In RetroPie, go to the Command Line and type the following to download the script:
 ```
-wget https://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh
+wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh
 ```
 ```
 sudo chmod +x moonlight.sh
@@ -26,7 +53,7 @@ sudo ./moonlight.sh
 ## If you get a TLS or SSL Error
 Sometimes, this can happen when trying to wget the script above. If it does, try this wget command instead
 ```
-wget https://raw.githubusercontent.com/TechWizTime/moonlight-retropie/master/moonlight.sh  --no-check
+wget https://raw.githubusercontent.com/Klubas/moonlight-retropie/master/moonlight.sh  --no-check
 ```
 
 And if you are feeling particulary lazy, here's a shortlink via my website
